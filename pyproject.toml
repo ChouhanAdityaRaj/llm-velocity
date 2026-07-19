@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "LLMVelocity"
+version = "1.0.0"
+authors = [
+  { name="Aditya Raj Singh Chouhan", email="adityarajschouhan@gmail.com" },
+]
+description = "A high-speed LLM wrapper caching session context to slash repetitive LLM response times from seconds down to milliseconds."
+license = {file = "LICENSE"}
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "faiss-cpu>=1.13.2",
+    "numpy>=2.4.4",
+    "rapidfuzz>=3.14.5",
+    "requests>=2.33.1",
+    "sentence-transformers>=5.4.1",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ChouhanAdityaRaj/LLMVelocity"
+"Bug Tracker" = "https://github.com/ChouhanAdityaRaj/LLMVelocity/issues"

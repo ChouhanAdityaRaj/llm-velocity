@@ -1,0 +1,28 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+
+# === Databases ===
+# Common SQLite, local, and engine DB files
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.mdb
+*.ldb
+
+# Ignore any file named fssai.index anywhere in the project
+**/fssai.index
+
+# Ignore any file named fssai.index anywhere in the project
+**/tool.json
+
+
