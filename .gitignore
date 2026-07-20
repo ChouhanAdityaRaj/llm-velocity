@@ -19,10 +19,11 @@ wheels/
 *.mdb
 *.ldb
 
-# Ignore any file named fssai.index anywhere in the project
-**/faiss.index
-**/chat_context.db
-**/tool.json
+# Ignore any file inside data_collection
+data_collection/*
+
+# But keep the .gitkeep file
+!data_collection/.gitkeep
 
 
 
