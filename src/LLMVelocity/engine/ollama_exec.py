@@ -1,6 +1,6 @@
 import json
 import requests
-from src.llm_caching.constants import prompt
+from src.LLMVelocity.constants import prompt
 
 class OllamaExec:
     def __init__(self, ollama_host: str, ollama_model: str):

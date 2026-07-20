@@ -4,8 +4,8 @@ import threading
 import time
 from contextlib import contextmanager
 from typing import  Callable
-from src.llm_caching.models.models import ChatContext
-from src.llm_caching.sql.queries import CREATE_TABLES
+from src.LLMVelocity.models.models import ChatContext
+from src.LLMVelocity.sql.queries import CREATE_TABLES
 
 class DatabaseExec:
     def __init__(self, database_name: str, retry_count: int = 5):
@@ -147,9 +147,9 @@ class DatabaseExec:
 # # from psycopg import Error
 # # from psycopg.errors import UniqueViolation
 # import sqlite3
-# from src.llm_caching.models.models import ChatContext
-# from src.llm_caching.constants import constants
-# from src.llm_caching.sql.queries import CREATE_TABLES
+# from src.LLMVelocity.models.models import ChatContext
+# from src.LLMVelocity.constants import constants
+# from src.LLMVelocity.sql.queries import CREATE_TABLES
 
 # class DatabaseExec:
 

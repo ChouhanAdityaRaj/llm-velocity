@@ -2,7 +2,7 @@ import os
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from src.llm_caching.constants import constants
+from src.LLMVelocity.constants import constants
 
 class SemanticSearch:
     def __init__(self, sentence_transformer_model: SentenceTransformer):

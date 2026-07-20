@@ -1,6 +1,6 @@
-from src.llm_caching.engine import database_exec, semantic_search, ollama_exec, tool_definition_store, text_search
-from src.llm_caching.utils import utils
-from src.llm_caching.models import models
+from src.LLMVelocity.engine import database_exec, semantic_search, ollama_exec, tool_definition_store, text_search
+from src.LLMVelocity.utils import utils
+from src.LLMVelocity.models import models
 
 class LookUpStore:
     def __init__(self, database_exec_obj: database_exec.DatabaseExec, semantic_search_obj: semantic_search.SemanticSearch, ollama_exec_obj: ollama_exec.OllamaExec, tool_definition_store_obj: tool_definition_store.ToolDefinitionStore):

@@ -1,8 +1,8 @@
-from src.llm_caching.service.look_up_store import LookUpStore
-from src.llm_caching.engine import database_exec, ollama_exec, semantic_search, tool_definition_store
+from src.LLMVelocity.service.look_up_store import LookUpStore
+from src.LLMVelocity.engine import database_exec, ollama_exec, semantic_search, tool_definition_store
 from sentence_transformers import SentenceTransformer
-from src.llm_caching.models.models import ChatContext
-from src.llm_caching.constants import constants
+from src.LLMVelocity.models.models import ChatContext
+from src.LLMVelocity.constants import constants
 
 class LLMLookUpStore:
     def __init__(self, ollama_model: str, ollama_url: str, tools_json_file_path: str):
