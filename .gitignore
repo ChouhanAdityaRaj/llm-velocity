@@ -20,8 +20,8 @@ wheels/
 *.ldb
 
 # Ignore any file named fssai.index anywhere in the project
-**/fassi.index
-**/*.db
+**/faiss.index
+**/chat_context.db
 **/tool.json
 
 
