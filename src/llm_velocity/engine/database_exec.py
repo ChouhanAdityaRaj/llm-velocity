@@ -4,8 +4,8 @@ import threading
 import time
 from contextlib import contextmanager
 from typing import  Callable
-from src.LLMVelocity.models.models import ChatContext
-from src.LLMVelocity.sql.queries import CREATE_TABLES
+from src.llm_velocity.models.models import ChatContext
+from src.llm_velocity.sql.queries import CREATE_TABLES
 
 class DatabaseExec:
     def __init__(self, database_name: str, retry_count: int = 5):
@@ -21,8 +21,8 @@ class DatabaseExec:
   
     def store_chat_context(self, chat_context: ChatContext):
         """ Method to store chat context into database """
-        query = """INSERT INTO chat_context (user_message, tool_name, llm_response)
-            VALUES (?, ?, ?);"""
+        query = """INSERT INTO chat_context (user_message, tool_name, llm_response, arguments)
+            VALUES (?, ?, ?, ?);"""
 
         def run():
             with self.__transaction() as conn:   # use single underscore (recommended)
@@ -30,8 +30,9 @@ class DatabaseExec:
                     query,
                     (
                         chat_context.user_message,
-                        chat_context.tool_name.strip(),
-                        json.dumps(chat_context.llm_response)
+                        chat_context.tool_name,
+                        json.dumps(chat_context.llm_response),
+                        json.dumps(chat_context.arguments)
                     )
                 )
 
@@ -48,7 +49,7 @@ class DatabaseExec:
         """ Method to fetch chat context by id from database """
         print(chat_context_id + 1)
 
-        query = "SELECT id, user_message, tool_name, llm_response, created_at FROM chat_context WHERE id = ?; "
+        query = "SELECT id, user_message, tool_name, llm_response, arguments, created_at FROM chat_context WHERE id = ?; "
 
         result = self.__execute(query, (int(chat_context_id)+1,), fetch_one=True)
 
@@ -67,6 +68,8 @@ class DatabaseExec:
             return None
         if row.get("llm_response"):
             row["llm_response"] = json.loads(row["llm_response"])
+        if row.get("arguments"):
+            row["arguments"] = json.loads(row["arguments"])
         return row
     
     def __get_connection(self):
@@ -108,9 +111,6 @@ class DatabaseExec:
         def run():
             conn = self.__get_connection()
             cursor = conn.cursor()
-            print("QUERY:", query)
-            print("PARAMS:", params)
-
 
             try:
                 cursor.execute(query, params)
@@ -147,9 +147,9 @@ class DatabaseExec:
 # # from psycopg import Error
 # # from psycopg.errors import UniqueViolation
 # import sqlite3
-# from src.LLMVelocity.models.models import ChatContext
-# from src.LLMVelocity.constants import constants
-# from src.LLMVelocity.sql.queries import CREATE_TABLES
+# from src.llm_velocity.models.models import ChatContext
+# from src.llm_velocity.constants import constants
+# from src.llm_velocity.sql.queries import CREATE_TABLES
 
 # class DatabaseExec:
 

@@ -5,3 +5,4 @@ SIMILARITY_THRESHOLD: float = 0.7
 DATABASE_NAME: str = "data_collection/chat_context.db"
 TEXT_MATCH_MIN_SCORE: float = 80.0
 SEMANTIC_SEARCH_MODEL: str = "all-MiniLM-L6-v2"
+USER_MESSAGE_PROPERTY: str = "user_message:"

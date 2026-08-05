@@ -1,6 +1,6 @@
-from src.LLMVelocity.engine import database_exec, semantic_search, ollama_exec, tool_definition_store, text_search
-from src.LLMVelocity.utils import utils
-from src.LLMVelocity.models import models
+from src.llm_velocity.engine import database_exec, semantic_search, ollama_exec, tool_definition_store, text_search
+from src.llm_velocity.utils import utils
+from src.llm_velocity.models import models
 
 class LookUpStore:
     def __init__(self, database_exec_obj: database_exec.DatabaseExec, semantic_search_obj: semantic_search.SemanticSearch, ollama_exec_obj: ollama_exec.OllamaExec, tool_definition_store_obj: tool_definition_store.ToolDefinitionStore):
@@ -9,7 +9,7 @@ class LookUpStore:
         self.__ollama_exec_obj: ollama_exec.OllamaExec = ollama_exec_obj
         self.__tool_definition_store_obj: tool_definition_store.ToolDefinitionStore = tool_definition_store_obj
 
-    def search_in_store(self, user_message: str) -> str | None:
+    def search_in_store(self, user_message: str) -> models.StoreResp | None:
 
         db_user_message_list =  self.__database_exec_obj.get_all_chat_user_message() #! optimize this latter
         chat_id: int = None

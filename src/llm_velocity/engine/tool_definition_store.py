@@ -1,8 +1,9 @@
 import json
+from pathlib import Path
 
 class ToolDefinitionStore:
     def __init__(self, json_file_path: str):
-        self.__json_file_path: str = json_file_path
+        self.__json_file_path: str = Path(json_file_path)
         self.__tool_definition_obj: dict[str, list[str]]
 
     def load_tools(self) -> None:
@@ -10,4 +11,4 @@ class ToolDefinitionStore:
             self.__tool_definition_obj = json.load(f)
 
     def get_tool_definition(self, tool_name: str) -> list[str]:
-        return self.__tool_definition_obj[tool_name.strip()]
+        return self.__tool_definition_obj[tool_name]
