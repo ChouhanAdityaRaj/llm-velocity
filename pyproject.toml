@@ -8,7 +8,7 @@ version = "1.0.0"
 authors = [
   { name="Aditya Raj Singh Chouhan", email="adityarajschouhan@gmail.com" },
 ]
-description = "A high-speed LLM wrapper caching session context to slash repetitive LLM response times from seconds down to milliseconds."
+description = "llm_velocity is a high-performance Python wrapper designed to optimize repeated Large Language Model (LLM) calls."
 license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.11"

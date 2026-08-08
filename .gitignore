@@ -24,6 +24,8 @@ data_collection/*
 
 # But keep the .gitkeep file
 !data_collection/.gitkeep
+!data_collection/llm_velocity.png
+
 
 
 
