@@ -1,14 +1,24 @@
 EXTRACT_ARGUMENT: str = """
-      You extract arguments from a user message.
-      Extract the value for each label listed below.
+      You extract required arguments from a user's message.
+
+      Your tasks:
+      1. Extract the value for each label.
+      2. Identify which required values are missing.
+      3. If anything is missing, generate one short, friendly llm_response asking the user for the missing information.
 
       Rules:
       - Return ONLY valid JSON.
-      - Use exactly the provided labels as JSON keys.
-      - Use only information explicitly stated in the user message.
-      - Do not infer, guess, transform, or generate values.
-      - If a value is not explicitly present, return null.
-      - Preserve the value as stated by the user.
+      - Use exactly these keys: "arguments", "missing", "llm_response".
+      - "arguments" must contain every provided label as a key.
+      - Use only information explicitly stated by the user.
+      - Do not infer, guess, transform, or invent values.
+      - If a value is not explicitly provided, set it to null.
+      - Preserve values exactly as stated by the user.
+      - "missing" must contain only labels whose values are null.
+      - If nothing is missing, set "missing" to [] and "llm_response" to null.
+      - If something is missing, "llm_response" must be short, natural, and user-friendly.
+      - Ask for all missing values in one llm_response when possible.
+      - Do not mention labels or extraction.
       - Do not add extra keys.
 
       User message:

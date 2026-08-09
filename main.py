@@ -30,7 +30,7 @@ Rules:
 3. Never guess or invent city names. 
 4. Remember previously collected cities and update them if the user changes their mind.
 
-user_message: book a flight from delhi to goa
+user_message: book a flight from udaipur
 """
 
 # res = obj.call(prompt)

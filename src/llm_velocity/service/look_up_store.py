@@ -32,9 +32,9 @@ class LookUpStore:
             # 5. if tool call then send tool name with arguments 
             tool_paramaters = self.__tool_definition_store_obj.get_tool_definition(chat_detils.tool_name)
 
-            arguments = self.__ollama_exec_obj.extract_argument(user_message, tool_paramaters)
+            llm_resp, arguments = self.__ollama_exec_obj.extract_argument(user_message, tool_paramaters)
 
-            return utils.output_json("",chat_detils.tool_name, arguments)
+            return utils.output_json(llm_resp, chat_detils.tool_name, arguments)
         
         
     def add_to_store(self, chat_context: models.ChatContext) -> None:

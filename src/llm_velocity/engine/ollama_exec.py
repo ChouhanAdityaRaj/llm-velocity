@@ -8,7 +8,7 @@ class OllamaExec:
         self.__ollama_url: str = f"{ollama_host}/api/chat"
         self.__ollama_model: str = ollama_model
 
-    def  extract_argument(self, user_message: str, argument_to_extract: list[str]) -> dict[str: str]:
+    def  extract_argument(self, user_message: str, argument_to_extract: list[str]) -> tuple[str, dict[str: str]]:
         """ 
             Method to extract argument from user message based on provided argument labels. 
             return 
@@ -31,8 +31,9 @@ class OllamaExec:
         data = response.json()
 
         try:
-            print(data["message"]["content"])
-            return json.loads(data["message"]["content"])
+
+            resp = json.loads(data["message"]["content"])
+            return resp["llm_response"], resp["arguments"]
         except Exception:
             print("RAW OUTPUT:", data)
             return None
