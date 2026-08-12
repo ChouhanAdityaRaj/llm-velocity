@@ -3,11 +3,13 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from src.llm_velocity.constants import constants
+from pathlib import Path
 
 class SemanticSearch:
-    def __init__(self, sentence_transformer_model: SentenceTransformer):
+    def __init__(self, sentence_transformer_model: SentenceTransformer, index_file_path: str):
         self.__sentence_transformer_model = sentence_transformer_model
         self.__faiss_index: faiss.IndexHNSWFlat = faiss.IndexHNSWFlat(384,32,faiss.METRIC_INNER_PRODUCT)
+        self.__index_file_path: str = index_file_path
 
     def build_index(self, user_messages: list[str]):
         """ Method to buld index from user messages """
@@ -44,13 +46,13 @@ class SemanticSearch:
     
     def save_index_into_file(self):
         """ Method to save index into index file """
-        faiss.write_index(self.__faiss_index, constants.INDEX_FILE_PATH)
+        faiss.write_index(self.__faiss_index, str(self.__index_file_path))
 
     def load_index_from_file(self):
         """ Method to load index from index file """
 
-        if os.path.exists(constants.INDEX_FILE_PATH):
-            self.__faiss_index = faiss.read_index(constants.INDEX_FILE_PATH)
+        if os.path.exists(self.__index_file_path):
+            self.__faiss_index = faiss.read_index(str(self.__index_file_path))
             return 
     
         # Create new HNSW index
@@ -59,7 +61,7 @@ class SemanticSearch:
         index.hnsw.efSearch = 16
     
         # Save empty index
-        faiss.write_index(index, constants.INDEX_FILE_PATH)
+        faiss.write_index(index, str(self.__index_file_path))
     
         self.__faiss_index =  index
     

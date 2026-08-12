@@ -1,5 +1,5 @@
 from src.llm_velocity.service.look_up_store import LookUpStore
-from src.llm_velocity.engine import database_exec, ollama_exec, semantic_search, tool_definition_store
+from src.llm_velocity.engine import database_exec, ollama_exec, semantic_search, tool_definition_store, storage
 from sentence_transformers import SentenceTransformer
 from src.llm_velocity.models.models import ChatContext
 from src.llm_velocity.constants import constants
@@ -7,6 +7,7 @@ from src.llm_velocity.models import models
 
 class LLMLookUpStore:
     def __init__(self, ollama_model: str, ollama_url: str, tools_json_file_path: str):
+        self__storage_obj : storage.Storage
         self.__ollama_model: str = ollama_model
         self.__ollama_url: str = ollama_url
         self.__tools_json_file_path: str = tools_json_file_path
@@ -18,9 +19,10 @@ class LLMLookUpStore:
 
     def init_setup(self) -> None:
         """Initial setup of class"""
-        self.__database_exec_obj = database_exec.DatabaseExec(constants.DATABASE_NAME)
+        self__storage_obj = storage.Storage(constants.PROJECT_NAME, constants.DATABASE_NAME, constants.INDEX_NAME)
+        self.__database_exec_obj = database_exec.DatabaseExec(self__storage_obj.database_path)
         self.__ollama_exec_obj = ollama_exec.OllamaExec(self.__ollama_url, self.__ollama_model)
-        self.__semantic_search_obj = semantic_search.SemanticSearch(SentenceTransformer(constants.SENTENCE_TRANSORMER_MODEL))
+        self.__semantic_search_obj = semantic_search.SemanticSearch(SentenceTransformer(constants.SENTENCE_TRANSORMER_MODEL), self__storage_obj.index_path)
         self.__tool_definition_store_obj = tool_definition_store.ToolDefinitionStore(self.__tools_json_file_path)
         self.__cache_manager_obj = LookUpStore(self.__database_exec_obj, self.__semantic_search_obj, self.__ollama_exec_obj, self.__tool_definition_store_obj)
 
@@ -47,6 +49,3 @@ class LLMLookUpStore:
             return ollama_call_res
 
         return
-
-
-    

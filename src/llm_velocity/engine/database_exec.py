@@ -6,10 +6,11 @@ from contextlib import contextmanager
 from typing import  Callable
 from src.llm_velocity.models.models import ChatContext
 from src.llm_velocity.sql.queries import CREATE_TABLES
+from pathlib import Path
 
 class DatabaseExec:
-    def __init__(self, database_name: str, retry_count: int = 5):
-        self.__db_name = database_name
+    def __init__(self, database_file_path: Path, retry_count: int = 5):
+        self.__db_file_path = database_file_path
         self.__ = retry_count
         self.__local = threading.local()
 
@@ -75,7 +76,7 @@ class DatabaseExec:
     def __get_connection(self):
         if not hasattr(self.__local, "conn"):
             self.__local.conn = sqlite3.connect(
-                self.__db_name,
+                self.__db_file_path,
                 check_same_thread=False
             )
             self.__local.conn.row_factory = sqlite3.Row

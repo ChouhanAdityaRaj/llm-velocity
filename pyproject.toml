@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "faiss-cpu>=1.13.2",
     "numpy>=2.4.4",
+    "platformdirs>=4.11.2",
     "rapidfuzz>=3.14.5",
     "requests>=2.33.1",
     "sentence-transformers>=5.4.1",
