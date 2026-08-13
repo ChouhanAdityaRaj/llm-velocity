@@ -4,11 +4,11 @@ import threading
 import time
 from contextlib import contextmanager
 from typing import  Callable
-from src.llm_velocity.models.models import ChatContext
-from src.llm_velocity.sql.queries import CREATE_TABLES
+from src.llm_velocity._models._models import ChatContext
+from src.llm_velocity._sql._queries import CREATE_TABLES
 from pathlib import Path
 
-class DatabaseExec:
+class _DatabaseExec:
     def __init__(self, database_file_path: Path, retry_count: int = 5):
         self.__db_file_path = database_file_path
         self.__ = retry_count

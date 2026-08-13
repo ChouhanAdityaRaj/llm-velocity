@@ -2,7 +2,7 @@ from pathlib import Path
 from platformdirs import user_data_dir
 
 
-class Storage:
+class _Storage:
     def __init__(self, project_name: str, database_name: str, index_name: str):
         self.storage_dir = Path(user_data_dir(project_name))
 

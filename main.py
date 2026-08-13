@@ -1,4 +1,5 @@
-from src.llm_velocity.llm_velocity import LLMLookUpStore
+from llm_velocity import LLMLookUpStore
+
 
 prompt = """
 You are a flight booking assistant. Your only job is to extract `flying_from` and `flying_to`.
@@ -27,3 +28,7 @@ luStore.init_setup()
 
 res = luStore.call_store(prompt)
 print(res)
+
+# ! error handling
+# ! prompt update
+# ! testing

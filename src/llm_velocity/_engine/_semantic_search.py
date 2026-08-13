@@ -2,10 +2,10 @@ import os
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from src.llm_velocity.constants import constants
+from src.llm_velocity._constants import _constants
 from pathlib import Path
 
-class SemanticSearch:
+class _SemanticSearch:
     def __init__(self, sentence_transformer_model: SentenceTransformer, index_file_path: str):
         self.__sentence_transformer_model = sentence_transformer_model
         self.__faiss_index: faiss.IndexHNSWFlat = faiss.IndexHNSWFlat(384,32,faiss.METRIC_INNER_PRODUCT)
@@ -65,7 +65,7 @@ class SemanticSearch:
     
         self.__faiss_index =  index
     
-    def search_index(self, query: str, no_of_result_to_fetch: int=constants.NO_OF_RESULTS_TO_FETCH) -> int | None:
+    def search_index(self, query: str, no_of_result_to_fetch: int=_constants.NO_OF_RESULTS_TO_FETCH) -> int | None:
         """ Method to search user message from index and return array chat context id and score """
 
         query_vec = self.__sentence_transformer_model.encode([query]).astype("float32")
@@ -85,7 +85,7 @@ class SemanticSearch:
             # Convert similarity (inner product)
             similarity = float(score)
             print("similarity", similarity)
-            if similarity >= constants.SIMILARITY_THRESHOLD:
+            if similarity >= _constants.SIMILARITY_THRESHOLD:
                 results.append({
                     "id": idx,
                     "score": similarity #remove this if unused

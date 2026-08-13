@@ -1,8 +1,8 @@
 from rapidfuzz import process, fuzz
-from src.llm_velocity.constants import constants
+from src.llm_velocity._constants import _constants
 
 
-class TextSearch:
+class _TextSearch:
     @staticmethod
     def search_text(data_list: list[str], key: str) -> int | None:
         if not data_list:
@@ -19,7 +19,7 @@ class TextSearch:
 
         _, score, index = result
 
-        if score < constants.TEXT_MATCH_MIN_SCORE:
+        if score < _constants.TEXT_MATCH_MIN_SCORE:
             return None
 
         return index
