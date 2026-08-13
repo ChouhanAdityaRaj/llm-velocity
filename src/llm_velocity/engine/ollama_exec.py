@@ -36,7 +36,7 @@ class OllamaExec:
             return resp["llm_response"], resp["arguments"]
         except Exception:
             print("RAW OUTPUT:", data)
-            return None
+            return models.StoreResp(error="internal error")
         
     def  call(self, user_prompt: str) -> models.StoreResp | None:
         """ 
@@ -68,6 +68,6 @@ class OllamaExec:
             return models.StoreResp(**json_llm_resp)
         except Exception:
             print("RAW OUTPUT:", data)
-            return None
+            return models.StoreResp(error="internal error")
     
         
