@@ -9,15 +9,15 @@ class LookUpStore:
         self.__ollama_exec_obj: ollama_exec.OllamaExec = ollama_exec_obj
         self.__tool_definition_store_obj: tool_definition_store.ToolDefinitionStore = tool_definition_store_obj
 
-    def search_in_store(self, user_message: str) -> models.StoreResp | None:
+    def search_in_store(self, user_message: str, logical_context: str) -> models.StoreResp | None:
 
         db_user_message_list =  self.__database_exec_obj.get_all_chat_user_message() #! optimize this latter
         chat_id: int = None
         # 1. text based search
-        chat_id = text_search.TextSearch.search_text(db_user_message_list, user_message)
+        chat_id = text_search.TextSearch.search_text(db_user_message_list, logical_context)
         if chat_id == None:
             # 2. semantic_search (if user message not found in text based)
-            chat_id = self.__semantic_search_obj.search_index(user_message)
+            chat_id = self.__semantic_search_obj.search_index(logical_context)
 
         if chat_id == None: 
             return None

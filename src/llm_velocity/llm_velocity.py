@@ -4,6 +4,7 @@ from sentence_transformers import SentenceTransformer
 from src.llm_velocity.models.models import ChatContext
 from src.llm_velocity.constants import constants
 from src.llm_velocity.models import models
+from src.llm_velocity.utils import utils
 
 class LLMLookUpStore:
     def __init__(self, ollama_model: str, ollama_url: str, tools_json_file_path: str):
@@ -31,7 +32,10 @@ class LLMLookUpStore:
         self.__tool_definition_store_obj.load_tools()
 
     def call_store(self, chat_message: str) -> models.StoreResp | None :
-        look_up_store_res =  self.__cache_manager_obj.search_in_store(chat_message)
+
+        logical_context = utils.extract_logical_context(chat_message)
+
+        look_up_store_res =  self.__cache_manager_obj.search_in_store(chat_message, logical_context)
         if look_up_store_res != None:
             print("from store")
             return look_up_store_res
@@ -43,7 +47,7 @@ class LLMLookUpStore:
                 llm_response=ollama_call_res.llm_response,
                 tool_name=ollama_call_res.tool_name,
                 arguments=ollama_call_res.arguments,
-                user_message=chat_message
+                user_message=logical_context
             ))
             print("from ollama")
             return ollama_call_res
