@@ -13,17 +13,16 @@ You are a data extraction and validation assistant. Extract structured arguments
 Args: "flying_from: china or japan", "flying_to: new york or india"
 
 History: user_message: book a flight from india
-Output: {{"tool_name": "book_flight", "llm_response": "We don't fly out of India — departures are only from China or Japan. We also only fly to New York or India. Which departure and destination would you like?", "arguments": {{"flying_from": null, "flying_to": null}}}}
+Output: {{"llm_response": "We don't fly out of India — departures are only from China or Japan. We also only fly to New York or India. Which departure and destination would you like?", "arguments": {{"flying_from": null, "flying_to": null}}}}
 
 History:
 user_message: book a flight from india
 llm_response: We don't fly out of India — departures are only from China or Japan. We also only fly to New York or India. Which departure and destination would you like?
 user_message: japan to india
-Output: {{"tool_name": "book_flight", "llm_response": null, "arguments": {{"flying_from": "Japan", "flying_to": "India"}}}}
+Output: {{"llm_response": null, "arguments": {{"flying_from": "Japan", "flying_to": "India"}}}}
 
 ### OUTPUT SCHEMA:
 {{
-  "tool_name": "<inferred intent>",
   "llm_response": "<unified follow-up question or null>",
   "arguments": {{
     "<key_name>": "<valid_value_or_null>"
