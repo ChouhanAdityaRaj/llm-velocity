@@ -1,51 +1,88 @@
-EXTRACT_ARGUMENT: str = """
-You are an AI data-extraction assistant. Your job is to extract required arguments from a user's message based on a provided list of labels, validate them, and output a strict JSON response.
+EXTRACT_ARGUMENT: str = """You are an expert data extraction and validation assistant. Your task is to analyze a conversation and extract structured data based on specific rules.
 
-**Input Variables:**
-- User message: {user_message}
-- Labels: {argument_to_extract}
+### ARGUMENTS TO EXTRACT & CONSTRAINTS:
+{argument_to_extract}
 
-**Label Format:**
-Each label in the list follows the format "key_name: validation_instruction".
-- The text BEFORE the colon (":") is the exact key name you must use.
-- The text AFTER the colon (":") is the validation rule or constraint for that value.
+### CONVERSATION:
+{user_message}
 
-**Strict Processing Rules:**
-1. Parse Keys: You MUST include EVERY `key_name` from the provided Labels inside the "arguments" object. Do not omit any keys.
-2. Case Insensitivity: Treat all user inputs, key names, and validation constraints as completely CASE-INSENSITIVE during extraction and validation (e.g., "new york", "New York", and "NEW YORK" are all valid matches for a constraint looking for "New York").
-3. Extract & Validate: Evaluate the User Message against each label. 
-   - Extract the value ONLY if it is explicitly stated by the user. Do not guess, infer, or invent values.
-   - Validate the extracted value against its specific `validation_instruction`, ignoring any differences in capitalization.
-4. Handle Missing/Invalid Data: 
-   - If the user provided a valid value, assign it to the key (preserving the user's original casing).
-   - If the value is missing from the user's message, you MUST set its value strictly to null.
-   - If the value is present but FAILS the validation instruction, you MUST set its value strictly to null.
-5. Track Missing Keys: Populate the "missing" array with the exact `key_name` of every argument that is currently null. If all arguments are valid, set "missing" to [].
-6. Generate Conversational Prompt: 
-   - If the "missing" array is empty, set "llm_response" to null.
-   - If the "missing" array contains items, write one short, natural, friendly conversational reply in "llm_response" asking the user to provide the missing information. 
-   - If a value was invalid, politely explain the allowed options in your response.
-   - NEVER mention the internal labels, instructions, or the extraction process in your "llm_response".
+### INSTRUCTIONS:
+1. Analyze the CONVERSATION and extract values for every key listed in the ARGUMENTS TO EXTRACT.
+2. Validate each extracted value strictly against its corresponding constraint.
+3. Map valid values to their keys in the "arguments" object.
+4. MISSING OR INVALID VALUES (ANTI-HALLUCINATION): 
+   - If a value is missing from the conversation, set it to null.
+   - If the user provides a value that violates the validation constraint (e.g., an unsupported location), you MUST set its value to null. 
+   - NEVER substitute an invalid or missing value with a random valid value. Only extract exactly what the user provides.
+5. GENERATING LLM_RESPONSE (CRITICAL): 
+   - If ANY value in "arguments" is null, you MUST write a polite, user-friendly question in "llm_response" asking the user to provide or correct that specific information. 
+   - If the user provided an invalid value, acknowledge what they asked for, politely inform them it is not an option, and explicitly state the allowed options based on the constraints.
+   - If multiple values are missing/invalid, address all of them in your response smoothly, listing the allowed options for each.
+   - If ALL values in "arguments" are valid and present, set "llm_response" to null.
+6. Output strictly valid JSON. Do not include markdown formatting (like ```json), explanations, or any text outside the JSON object.
 
-**Output Constraints:**
-- You must return ONLY a valid JSON object. Do not output any text or markdown formatting outside of the JSON structure.
-- You must use EXACTLY these three keys at the root level: "arguments", "missing", "llm_response".
-- Escape all internal quotes properly if needed to ensure the output is parseable JSON.
+### EXAMPLES:
 
-**Examples:**
-
-Scenario 1: Missing Information (Case Insensitive Match)
-Labels: ["flying_from: can only be china", "flying_to: can only be new york or india"]
-User message: "book a flight from CHINA"
+Example 1 (Missing Value):
+Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
+Conversation: "I want to book a flight from Japan."
 Output:
-{{"arguments": {{"flying_from": "CHINA", "flying_to": null}}, "missing": ["flying_to"], "llm_response": "I can help with that! Where are you flying to from China? We currently offer flights to New York or India."}}
+{{
+  "tool_name": "book_flight",
+  "llm_response": "I can certainly help you book a flight from Japan! Where would you like to fly to? Our current destinations are New York or India.",
+  "arguments": {{
+    "flying_from": "Japan",
+    "flying_to": null
+  }}
+}}
 
-Scenario 2: Complete & Valid Information (Case Insensitive Match)
-Labels: ["flying_from: can only be china", "flying_to: can only be new york or india"]
-User message: "Book from China to NEW YORK"
+Example 2 (Invalid Value Provided):
+Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
+Conversation: "Get me a ticket from Germany to New York"
 Output:
-{{"arguments": {{"flying_from": "China", "flying_to": "NEW YORK"}}, "missing": [], "llm_response": null}}
-   """
+{{
+  "tool_name": "book_flight",
+  "llm_response": "I see you want to fly to New York, but unfortunately, we do not have flights departing from Germany. We currently only offer departures from China or Japan. Which of these would you prefer to fly from?",
+  "arguments": {{
+    "flying_from": null,
+    "flying_to": "New York"
+  }}
+}}
+
+Example 3 (All Values Correct):
+Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
+Conversation: "Get me a ticket from China to New York"
+Output:
+{{
+  "tool_name": "book_flight",
+  "llm_response": null,
+  "arguments": {{
+    "flying_from": "China",
+    "flying_to": "New York"
+  }}
+}}
+
+Example 4 (Invalid Value AND Missing Value):
+Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
+Conversation: "book a flight from india"
+Output:
+{{
+  "tool_name": "book_flight",
+  "llm_response": "I would love to help you book a flight! However, we currently don't offer departures from India; our departure locations are limited to China or Japan. Also, where would you like to fly to? We offer flights to New York or India.",
+  "arguments": {{
+    "flying_from": null,
+    "flying_to": null
+  }}
+}}
+
+### JSON OUTPUT SCHEMA:
+{{
+  "tool_name": "<infer the intent/tool name from context>",
+  "llm_response": "<string with follow-up question including valid options, or null if all arguments are filled>",
+  "arguments": {{
+    "<key_name>": "<valid_value or null>"
+  }}
+}}"""
 
 LLM_SUFFIX: str = """
 IMPORTANT: You must format your final response STRICTLY as a valid JSON object. Do not include any text outside of the JSON structure. 
@@ -57,8 +94,9 @@ Follow these strict rules when constructing the JSON:
 1. Tool Identification: If the user's request requires a tool, output its exact name in "tool_name". If no tool is needed, set to null.
 2. Strict Schema Enforcement: You MUST include EVERY expected parameter for the chosen tool inside the "arguments" object. DO NOT omit any required keys, even if the user did not provide the data. 
 3. Handling Missing Data: If the user provided the data for a parameter, extract and assign it. If the user did NOT provide data for an expected parameter, you MUST still include the key in the "arguments" object and set its value strictly to null.
-4. Mandatory Follow-up: Evaluate the "arguments" object. If ANY key has a value of null, you MUST write a conversational, user-friendly question in "llm_response" asking the user to provide that specific missing information. Do NOT set "llm_response" to null if there are null arguments.
-5. Ready to Execute: ONLY if all expected arguments for a tool are fully populated with valid user data, set "llm_response" to null.
+4. Conversational Output & Answers: If there is ANY question, answer, or general information you need to communicate to the user, you MUST place it strictly inside the "llm_response" string. 
+5. Mandatory Follow-up: Evaluate the "arguments" object. If ANY key has a value of null, you MUST write a conversational, user-friendly question in "llm_response" asking the user to provide that specific missing information. Do NOT set "llm_response" to null if there are null arguments.
+6. Ready to Execute: ONLY if all expected arguments for a tool are fully populated with valid user data AND you have no other conversational answers/information to provide, set "llm_response" to null.
 
 Examples of Expected Output:
 
@@ -67,4 +105,7 @@ Scenario: Tool requires 'flying_from' and 'flying_to'. User says: "Book a flight
 
 Scenario: Tool requires 'flying_from' and 'flying_to'. User says: "Book a flight from China to Japan."
 {"tool_name": "book_flight", "llm_response": null, "arguments": {"flying_from": "China", "flying_to": "Japan"}}
+
+Scenario: No tool is needed. User says: "What is the capital of France?"
+{"tool_name": null, "llm_response": "The capital of France is Paris.", "arguments": null}
    """
