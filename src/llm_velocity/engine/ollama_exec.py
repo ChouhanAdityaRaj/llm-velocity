@@ -21,12 +21,12 @@ class OllamaExec:
             "messages": [
                 {
                     "role": "user",
-                    "content": prompt.EXTRACT_ARGUMENT.format(user_message=exteracted_user_ai_chat_msg, argument_to_extract=", ".join(argument_to_extract))
+                    "content": prompt.EXTRACT_ARGUMENT.format(conversation_history=exteracted_user_ai_chat_msg, argument_to_extract=", ".join(argument_to_extract))
                 }
             ],
             "stream": False,
             "format": "json"
-        }, timeout=60)
+        }, timeout=600)
 
         data = response.json()
 

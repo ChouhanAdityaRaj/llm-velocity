@@ -1,88 +1,50 @@
-EXTRACT_ARGUMENT: str = """You are an expert data extraction and validation assistant. Your task is to analyze a conversation and extract structured data based on specific rules.
+EXTRACT_ARGUMENT: str = """You are a data extraction and validation assistant. Extract structured arguments from a multi-turn conversation.
 
-### ARGUMENTS TO EXTRACT & CONSTRAINTS:
-{argument_to_extract}
+### RULES:
+1. Read the full history; later user messages override earlier ones for the same field, but valid values from earlier turns still count if never contradicted.
+2. Validate every value against its constraint.
+3. If a value is missing OR invalid, set it to null. Never invent or substitute a value the user didn't provide.
+4. If any argument is null:
+   - Write one natural, cohesive "llm_response" that: acknowledges any newly-provided valid info, notes any invalid input given (state why it's invalid), and asks for all still-missing/invalid fields together with their valid options — as a single question, not several robotic ones.
+   - Do not repeat prior assistant messages.
+5. If all arguments are valid, set "llm_response" to null.
+6. Output strictly valid JSON only — no markdown, no extra text.
 
-### CONVERSATION:
-{user_message}
-
-### INSTRUCTIONS:
-1. Analyze the CONVERSATION and extract values for every key listed in the ARGUMENTS TO EXTRACT.
-2. Validate each extracted value strictly against its corresponding constraint.
-3. Map valid values to their keys in the "arguments" object.
-4. MISSING OR INVALID VALUES (ANTI-HALLUCINATION): 
-   - If a value is missing from the conversation, set it to null.
-   - If the user provides a value that violates the validation constraint (e.g., an unsupported location), you MUST set its value to null. 
-   - NEVER substitute an invalid or missing value with a random valid value. Only extract exactly what the user provides.
-5. GENERATING LLM_RESPONSE (CRITICAL): 
-   - If ANY value in "arguments" is null, you MUST write a polite, user-friendly question in "llm_response" asking the user to provide or correct that specific information. 
-   - If the user provided an invalid value, acknowledge what they asked for, politely inform them it is not an option, and explicitly state the allowed options based on the constraints.
-   - If multiple values are missing/invalid, do not ask multiple robotic questions back-to-back. Instead, blend the missing information naturally into a single, cohesive conversational response that states the available options for all missing fields and asks one unified question.
-   - If ALL values in "arguments" are valid and present, set "llm_response" to null.
-6. Output strictly valid JSON. Do not include markdown formatting (like ```json), explanations, or any text outside the JSON object.
--
 ### EXAMPLES:
 
-Example 1 (Missing Value):
-Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
-Conversation: "I want to book a flight from Japan."
-Output:
+Missing value:
+Args: "flying_from: china or japan", "flying_to: new york or india"
+History: user_message: I want to book a flight from Japan.
+Output: {{"tool_name": "book_flight", "llm_response": "Great, flying from Japan! Where would you like to go — New York or India?", "arguments": {{"flying_from": "Japan", "flying_to": null}}}}
+
+Invalid + missing combined:
+Args: "flying_from: china or japan", "flying_to: new york or india"
+History: user_message: book a flight from india
+Output: {{"tool_name": "book_flight", "llm_response": "We don't fly out of India — departures are only from China or Japan. We also only fly to New York or India. Which departure and destination would you like?", "arguments": {{"flying_from": null, "flying_to": null}}}}
+
+Complete (multi-turn):
+Args: "flying_from: china or japan", "flying_to: new york or india"
+History:
+user_message: book a flight from india
+llm_response: We don't fly out of India — departures are only from China or Japan. We also only fly to New York or India. Which departure and destination would you like?
+user_message: japan to india
+Output: {{"tool_name": "book_flight", "llm_response": null, "arguments": {{"flying_from": "Japan", "flying_to": "India"}}}}
+
+### OUTPUT SCHEMA:
 {{
-  "tool_name": "book_flight",
-  "llm_response": "I can certainly help you book a flight from Japan! Where would you like to fly to? Our current destinations are New York or India.",
+  "tool_name": "<inferred intent>",
+  "llm_response": "<unified follow-up question or null>",
   "arguments": {{
-    "flying_from": "Japan",
-    "flying_to": null
+    "<key_name>": "<valid_value_or_null>"
   }}
 }}
 
-Example 2 (Invalid Value Provided):
-Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
-Conversation: "Get me a ticket from Germany to New York"
-Output:
-{{
-  "tool_name": "book_flight",
-  "llm_response": "I see you want to fly to New York, but unfortunately, we do not have flights departing from Germany. We currently only offer departures from China or Japan. Which of these would you prefer to fly from?",
-  "arguments": {{
-    "flying_from": null,
-    "flying_to": "New York"
-  }}
-}}
+### ARGUMENTS & CONSTRAINTS:
+{argument_to_extract}
 
-Example 3 (All Values Correct):
-Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
-Conversation: "Get me a ticket from China to New York"
-Output:
-{{
-  "tool_name": "book_flight",
-  "llm_response": null,
-  "arguments": {{
-    "flying_from": "China",
-    "flying_to": "New York"
-  }}
-}}
-
-Example 4 (Invalid Value AND Missing Value):
-Arguments: "flying_from: can only be china or japan", "flying_to: can only be new york or india"
-Conversation: "book a flight from india"
-Output:
-{{
-  "tool_name": "book_flight",
-  "llm_response": "I can certainly help you book a flight! However, we currently don't offer departures from India; our departure locations are limited to China or Japan. We also only fly to New York or India. Could you let me know your preferred departure and destination from these options?",
-  "arguments": {{
-    "flying_from": null,
-    "flying_to": null
-  }}
-}}
-
-### JSON OUTPUT SCHEMA:
-{{
-  "tool_name": "<infer the intent/tool name from context>",
-  "llm_response": "<string with a unified follow-up question including valid options, or null if all arguments are filled>",
-  "arguments": {{
-    "<key_name>": "<valid_value or null>"
-  }}
-}}"""
+### CONVERSATION HISTORY:
+{conversation_history}
+"""
 
 LLM_SUFFIX: str = """
 IMPORTANT: You must format your final response STRICTLY as a valid JSON object. Do not include any text outside of the JSON structure. 
