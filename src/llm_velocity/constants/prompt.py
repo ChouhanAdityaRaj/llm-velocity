@@ -17,10 +17,10 @@ EXTRACT_ARGUMENT: str = """You are an expert data extraction and validation assi
 5. GENERATING LLM_RESPONSE (CRITICAL): 
    - If ANY value in "arguments" is null, you MUST write a polite, user-friendly question in "llm_response" asking the user to provide or correct that specific information. 
    - If the user provided an invalid value, acknowledge what they asked for, politely inform them it is not an option, and explicitly state the allowed options based on the constraints.
-   - If multiple values are missing/invalid, address all of them in your response smoothly, listing the allowed options for each.
+   - If multiple values are missing/invalid, do not ask multiple robotic questions back-to-back. Instead, blend the missing information naturally into a single, cohesive conversational response that states the available options for all missing fields and asks one unified question.
    - If ALL values in "arguments" are valid and present, set "llm_response" to null.
 6. Output strictly valid JSON. Do not include markdown formatting (like ```json), explanations, or any text outside the JSON object.
-
+-
 ### EXAMPLES:
 
 Example 1 (Missing Value):
@@ -68,7 +68,7 @@ Conversation: "book a flight from india"
 Output:
 {{
   "tool_name": "book_flight",
-  "llm_response": "I would love to help you book a flight! However, we currently don't offer departures from India; our departure locations are limited to China or Japan. Also, where would you like to fly to? We offer flights to New York or India.",
+  "llm_response": "I can certainly help you book a flight! However, we currently don't offer departures from India; our departure locations are limited to China or Japan. We also only fly to New York or India. Could you let me know your preferred departure and destination from these options?",
   "arguments": {{
     "flying_from": null,
     "flying_to": null
@@ -78,7 +78,7 @@ Output:
 ### JSON OUTPUT SCHEMA:
 {{
   "tool_name": "<infer the intent/tool name from context>",
-  "llm_response": "<string with follow-up question including valid options, or null if all arguments are filled>",
+  "llm_response": "<string with a unified follow-up question including valid options, or null if all arguments are filled>",
   "arguments": {{
     "<key_name>": "<valid_value or null>"
   }}
