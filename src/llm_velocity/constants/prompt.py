@@ -47,24 +47,18 @@ Output: {{"llm_response": null, "arguments": {{"flying_from": "Japan", "flying_t
 """
 
 LLM_SUFFIX: str = """
-IMPORTANT: Respond STRICTLY as valid JSON, no text outside it, matching:
-{"tool_name": string | null, "llm_response": string | null, "arguments": object | null}
-
-Rules:
-1. "tool_name": exact tool name if one is needed, else null.
-2. If a tool is used, "arguments" MUST include every expected parameter as a key — never omit one. Fill in values the user gave; set any not given to null.
-3. Put all conversational text (questions, answers, info) in "llm_response" — never elsewhere.
-4. If any argument is null, "llm_response" MUST ask the user for that missing info (never null in this case).
-5. Set "llm_response" to null ONLY if all arguments are filled AND you have nothing else to say. If no tool is needed, set "arguments" to null.
-
-Examples:
-
-User: "Book a flight from China." (tool needs flying_from, flying_to)
-{"tool_name": "book_flight", "llm_response": "I can help with that! Where are you flying to from China?", "arguments": {"flying_from": "China", "flying_to": null}}
-
-User: "Book a flight from China to Japan." (tool needs flying_from, flying_to)
-{"tool_name": "book_flight", "llm_response": null, "arguments": {"flying_from": "China", "flying_to": "Japan"}}
-
-User: "What is the capital of France?" (no tool needed)
-{"tool_name": null, "llm_response": "The capital of France is Paris.", "arguments": null}
-   """
+    IMPORTANT: Respond STRICTLY as valid JSON, no text outside it, matching:
+    {"tool_name": string | null, "llm_response": string | null, "arguments": object | null}
+    
+    Rules:
+    1. "tool_name": exact tool name if one is needed, else null.
+    2. If a tool is used, "arguments" MUST include every expected parameter as a key — never omit one. Fill in values the user gave; set any not given to null.
+    3. Put all conversational text (questions, answers, info) in "llm_response" — never elsewhere.
+    
+    Examples:
+    User: "Book a flight from China." (tool needs flying_from, flying_to)
+    {"tool_name": "book_flight", "llm_response": "I can help with that! Where are you flying to from China?", "arguments": {"flying_from": "China", "flying_to": null}}
+    
+    User: "Book a flight from China to Japan." (tool needs flying_from, flying_to)
+    {"tool_name": "book_flight", "llm_response": null, "arguments": {"flying_from": "China", "flying_to": "Japan"}}
+  """
