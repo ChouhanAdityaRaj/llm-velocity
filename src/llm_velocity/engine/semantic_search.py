@@ -76,7 +76,7 @@ class SemanticSearch:
         distances, indices = self.__faiss_index.search(query_vec, no_of_result_to_fetch)
     
         results = []
-        print("Total vectors:",  self.__faiss_index.ntotal)
+        # print("Total vectors:",  self.__faiss_index.ntotal)
         for score, idx in zip(distances[0], indices[0]):
             
             if idx == -1:
@@ -84,7 +84,7 @@ class SemanticSearch:
             
             # Convert similarity (inner product)
             similarity = float(score)
-            print("similarity", similarity)
+            # print("similarity", similarity)
             if similarity >= constants.SIMILARITY_THRESHOLD:
                 results.append({
                     "id": idx,

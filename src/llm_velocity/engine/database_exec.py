@@ -47,7 +47,7 @@ class DatabaseExec:
     
     def get_chat_context(self, chat_context_id: int) -> ChatContext :
         """ Method to fetch chat context by id from database """
-        print(chat_context_id + 1)
+        # print(chat_context_id + 1)
 
         query = "SELECT id, user_message, tool_name, llm_response, created_at FROM chat_context WHERE id = ?; "
 

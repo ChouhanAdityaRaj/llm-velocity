@@ -18,7 +18,7 @@ class TextSearch:
             return None
 
         _, score, index = result
-        print("test metch score: ", score)
+        # print("test metch score: ", score)
         if score < constants.TEXT_MATCH_MIN_SCORE:
             return None
 
