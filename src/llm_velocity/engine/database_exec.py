@@ -22,8 +22,8 @@ class DatabaseExec:
   
     def store_chat_context(self, chat_context: ChatContext):
         """ Method to store chat context into database """
-        query = """INSERT INTO chat_context (user_message, tool_name, llm_response, arguments)
-            VALUES (?, ?, ?, ?);"""
+        query = """INSERT INTO chat_context (user_message, tool_name, llm_response)
+            VALUES (?, ?, ?);"""
 
         def run():
             with self.__transaction() as conn:   # use single underscore (recommended)
@@ -33,7 +33,6 @@ class DatabaseExec:
                         chat_context.user_message,
                         chat_context.tool_name,
                         json.dumps(chat_context.llm_response),
-                        json.dumps(chat_context.arguments)
                     )
                 )
 
@@ -50,7 +49,7 @@ class DatabaseExec:
         """ Method to fetch chat context by id from database """
         print(chat_context_id + 1)
 
-        query = "SELECT id, user_message, tool_name, llm_response, arguments, created_at FROM chat_context WHERE id = ?; "
+        query = "SELECT id, user_message, tool_name, llm_response, created_at FROM chat_context WHERE id = ?; "
 
         result = self.__execute(query, (int(chat_context_id)+1,), fetch_one=True)
 
@@ -69,8 +68,6 @@ class DatabaseExec:
             return None
         if row.get("llm_response"):
             row["llm_response"] = json.loads(row["llm_response"])
-        if row.get("arguments"):
-            row["arguments"] = json.loads(row["arguments"])
         return row
     
     def __get_connection(self):

@@ -25,7 +25,7 @@ class LookUpStore:
         # 5. Get chat context
         chat_detils = self.__database_exec_obj.get_chat_context(chat_id)
     
-        if chat_detils.tool_name == "":
+        if chat_detils.tool_name == None:
             # 4. if no tool calling retuen normal response
             return utils.output_json(chat_detils.llm_response)
         else:

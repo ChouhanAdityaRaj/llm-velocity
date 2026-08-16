@@ -42,14 +42,13 @@ class LLMLookUpStore:
 
         ollama_call_res = self.__ollama_exec_obj.call(chat_message);
 
-        if ollama_call_res != None:
+        if ollama_call_res.tool_name != None or ollama_call_res.llm_response != None :
             self.__cache_manager_obj.add_to_store(ChatContext(
                 llm_response=ollama_call_res.llm_response,
                 tool_name=ollama_call_res.tool_name,
-                arguments=ollama_call_res.arguments,
                 user_message=logical_context
             ))
             print("from ollama")
             return ollama_call_res
 
-        return
+        return  models.StoreResp(error="not_found")

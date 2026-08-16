@@ -5,7 +5,6 @@ CREATE_TABLES = [
         user_message TEXT NOT NULL,
         tool_name TEXT,
         llm_response TEXT NOT NULL,
-        arguments TEXT NOT NULL, 
         created_at INTEGER DEFAULT (strftime('%s', 'now'))
     )
     """
