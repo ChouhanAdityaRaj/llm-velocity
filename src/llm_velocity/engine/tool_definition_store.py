@@ -1,14 +1,13 @@
 import json
 from pathlib import Path
+from src.llm_velocity.models import models
 
 class ToolDefinitionStore:
-    def __init__(self, json_file_path: str):
-        self.__json_file_path: str = Path(json_file_path)
-        self.__tool_definition_obj: dict[str, list[str]]
+    def __init__(self, tool_definition: models.ToolInfo):
+        self.__tool_info: dict[str, models.ToolInfo] = tool_definition
 
-    def load_tools(self) -> None:
-        with open(self.__json_file_path, "r", encoding="utf-8") as f:
-            self.__tool_definition_obj = json.load(f)
-
-    def get_tool_definition(self, tool_name: str) -> list[str]:
-        return self.__tool_definition_obj[tool_name]
+    def get_all_tool_definition(self) ->  dict[str, models.ToolInfo]:
+        return self.__tool_info
+    
+    def get_tool_definition(self, tool_name: str) ->  models.ToolInfo:
+        return self.__tool_info[tool_name]

@@ -8,8 +8,9 @@
     "--disable=trailing-whitespace",
     "--disable=no-value-for-parameter",
     "--disable=broad-exception-raised",
-    "--disable=broad-exception-caught",
+    "--disable=broad-exception-caught"
     // "--disable=invalid-name",
     // "--disable=too-few-public-methods"
-  ]
+  ],
+  "cSpell.words": ["ollama"]
 }

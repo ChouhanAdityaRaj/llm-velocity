@@ -3,7 +3,7 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from src.llm_velocity.constants import constants
-from pathlib import Path
+from src.llm_velocity.models import models
 
 class SemanticSearch:
     def __init__(self, sentence_transformer_model: SentenceTransformer, index_file_path: str):
@@ -84,7 +84,7 @@ class SemanticSearch:
             
             # Convert similarity (inner product)
             similarity = float(score)
-            # print("similarity", similarity)
+            print("similarity", similarity)
             if similarity >= constants.SIMILARITY_THRESHOLD:
                 results.append({
                     "id": idx,
@@ -92,5 +92,75 @@ class SemanticSearch:
                 })
     
         return results[0]["id"] if results and "id" in results[0] else None
+
+
+    def match_best_method(
+        self,
+        user_messages: list[str],
+        method_descriptions: dict[str, str],
+        min_similarity: float = 0.15,
+    ) -> models.MethodMatch | None:
+        """
+        For each string in `user_messages`, find the best matching method
+        from `method_descriptions` (method_name -> description) using
+        embedding cosine similarity.
+
+        Messages whose best similarity falls below `min_similarity` are
+        treated as irrelevant/junk (e.g. greetings, small talk) and are
+        skipped entirely — they will NOT be force-matched to the
+        "least wrong" method.
+
+        Remaining matches are weighted by their position in `user_messages`:
+        earlier messages get lower weight, later messages get higher
+        weight (last message = weight n, where n = len(user_messages)).
+
+        Returns the single MethodMatch with the highest weighted_score,
+        or None if either input is empty or no message clears the
+        similarity threshold.
+        """
+        if not user_messages or not method_descriptions:
+            return None
+
+        method_names = list(method_descriptions.keys())
+        method_texts = list(method_descriptions.values())
+
+        # Encode & normalize method descriptions
+        method_embeddings = np.array(
+            self.__sentence_transformer_model.encode(method_texts)
+        ).astype("float32")
+        faiss.normalize_L2(method_embeddings)
+
+        # Encode & normalize user messages
+        message_embeddings = np.array(
+            self.__sentence_transformer_model.encode(user_messages)
+        ).astype("float32")
+        faiss.normalize_L2(message_embeddings)
+
+        n = len(user_messages)
+        matches: list[models.MethodMatch] = []
+
+        for i, (msg, msg_vec) in enumerate(zip(user_messages, message_embeddings)):
+            # cosine similarity == dot product, since both sides are L2-normalized
+            similarities = method_embeddings @ msg_vec
+            best_idx = int(np.argmax(similarities))
+            best_score = float(similarities[best_idx])  # -1..1
+
+            # Skip junk/irrelevant messages that don't clear the threshold
+            if best_score < min_similarity:
+                continue
+
+            weight = i + 1  # later message in the list => higher weight
+
+            matches.append(
+                MethodMatch(
+                    method_name=method_names[best_idx],
+                    match_percent=round(best_score * 100, 2),
+                    user_message=msg,
+                    weight=weight,
+                    weighted_score=best_score * weight,
+                )
+            )
+
+        return max(matches, key=lambda m: m.weighted_score) if matches else None
 
     

@@ -1,49 +1,20 @@
 EXTRACT_ARGUMENT: str = """
-You are a data extraction and validation assistant. Extract structured arguments from a multi-turn conversation.
+Extract argument values from the chat context below for each parameter listed. Use parameter description to identify correct value. If a parameter's value isn't found in context, use null.
 
-### RULES:
-1. Read the full history; later user messages override earlier ones for the same field, but valid values from earlier turns still count if never contradicted.
-2. Validate every value against its constraint.
-3. If a value is missing OR invalid, set it to null. Never invent or substitute a value the user didn't provide.
-4. If any argument is null:
-   - Write one natural, cohesive "llm_response" that: acknowledges any newly-provided valid info, notes any invalid input given (state why it's invalid), and asks for all still-missing/invalid fields together with their valid options — as a single question, not several robotic ones.
-   - Do not repeat prior assistant messages.
-5. If all arguments are valid, set "llm_response" to null.
-6. Output strictly valid JSON only — no markdown, no extra text.
+Parameters:
+{parameters}
 
-### EXAMPLES:
+Chat context:
+{chat_context}
 
-Missing value:
-Args: "flying_from: china or japan", "flying_to: new york or india"
-History: user_message: I want to book a flight from Japan.
-Output: {{"llm_response": "Great, flying from Japan! Where would you like to go — New York or India?", "arguments": {{"flying_from": "Japan", "flying_to": null}}}}
+Rules:
+- Match by meaning, not exact wording.
+- Output ONLY the array, no explanation.
+- Preserve parameter order.
+- Use null if not found.
 
-Invalid + missing combined:
-Args: "flying_from: china or japan", "flying_to: new york or india"
-History: user_message: book a flight from india
-Output: {{"llm_response": "We don't fly out of India — departures are only from China or Japan. We also only fly to New York or India. Which departure and destination would you like?", "arguments": {{"flying_from": null, "flying_to": null}}}}
-
-Complete (multi-turn):
-Args: "flying_from: china or japan", "flying_to: new york or india"
-History:
-user_message: book a flight from india
-llm_response: We don't fly out of India — departures are only from China or Japan. We also only fly to New York or India. Which departure and destination would you like?
-user_message: japan to india
-Output: {{"llm_response": null, "arguments": {{"flying_from": "Japan", "flying_to": "India"}}}}
-
-### OUTPUT SCHEMA:
-{{
-  "llm_response": "<unified follow-up question or null>",
-  "arguments": {{
-    "<key_name>": "<valid_value_or_null>"
-  }}
-}}
-
-### ARGUMENTS & CONSTRAINTS:
-{argument_to_extract}
-
-### CONVERSATION HISTORY:
-{conversation_history}
+Output format:
+[{{"param":"param_name_1","value":"<value or null>"}},{{"param":"param_name_2","value":"<value or null>"}}]
 """
 
 LLM_SUFFIX: str = """
@@ -58,7 +29,4 @@ LLM_SUFFIX: str = """
     Examples:
     User: "Book a flight from China." (tool needs flying_from, flying_to)
     {"tool_name": "book_flight", "llm_response": "I can help with that! Where are you flying to from China?", "arguments": {"flying_from": "China", "flying_to": null}}
-    
-    User: "Book a flight from China to Japan." (tool needs flying_from, flying_to)
-    {"tool_name": "book_flight", "llm_response": null, "arguments": {"flying_from": "China", "flying_to": "Japan"}}
   """

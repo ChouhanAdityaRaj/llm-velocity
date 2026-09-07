@@ -22,8 +22,7 @@ class DatabaseExec:
   
     def store_chat_context(self, chat_context: ChatContext):
         """ Method to store chat context into database """
-        query = """INSERT INTO chat_context (user_message, tool_name, llm_response)
-            VALUES (?, ?, ?);"""
+        query = """INSERT INTO chat_context (user_message, llm_response) VALUES (?, ?);"""
 
         def run():
             with self.__transaction() as conn:   # use single underscore (recommended)
@@ -31,7 +30,6 @@ class DatabaseExec:
                     query,
                     (
                         chat_context.user_message,
-                        chat_context.tool_name,
                         json.dumps(chat_context.llm_response),
                     )
                 )
@@ -49,7 +47,7 @@ class DatabaseExec:
         """ Method to fetch chat context by id from database """
         # print(chat_context_id + 1)
 
-        query = "SELECT id, user_message, tool_name, llm_response, created_at FROM chat_context WHERE id = ?; "
+        query = "SELECT id, user_message, llm_response, created_at FROM chat_context WHERE id = ?; "
 
         result = self.__execute(query, (int(chat_context_id)+1,), fetch_one=True)
 
@@ -127,99 +125,3 @@ class DatabaseExec:
                 cursor.close()   # ✅ critical
 
         return self.__retry(run)
-
-
-
-
-
-
-
-
-
-
-
-
-####################### postgresql ########################
-
-# # from psycopg_pool import ConnectionPool
-# # from psycopg import Error
-# # from psycopg.errors import UniqueViolation
-# import sqlite3
-# from src.llm_velocity.models.models import ChatContext
-# from src.llm_velocity.constants import constants
-# from src.llm_velocity.sql.queries import CREATE_TABLES
-
-# class DatabaseExec:
-
-#     # **to connect to postgresql
-#     def __init__(self, conn_str: str):
-#         self.__db_pool = ConnectionPool(
-#             conninfo=conn_str, min_size=5, max_size=20, timeout=10
-#         )
-
-#     def __execute_query(self, query: str, params=None, fetch_one=False, fetch_all=False):
-#         """ Generic method to execute queries safely """
-#         try:
-#             with self.__db_pool.connection() as conn:
-#                 with conn.cursor() as cur:
-#                     cur.execute(query, params, prepare=True)
-
-#                     if fetch_one:
-#                         return cur.fetchone()
-
-#                     if fetch_all:
-#                         return cur.fetchall()
-
-#                     conn.commit()
-#                     return True
-
-#         # 🔹 Specific DB Errors
-#         except UniqueViolation as e:
-#             print(f"Unique constraint error: {e}")
-#             return {"error": "duplicate_entry"}
-
-#         # 🔹 Generic Psycopg Error
-#         except Error as e:
-#             print(f"Database error: {e}")
-#             return {"error": "database_error"}
-
-#         # 🔹 Any unexpected error
-#         except Exception as e:
-#             print(f"Unexpected error: {e}")
-#             return {"error": "unknown_error_while_query_execution"}
-
-#     def store_chat_context(self, chat_context: ChatContext):
-#         """ Method to store chat context into database """
-      
-#         query = """
-#             INSERT INTO chat_context (user_message, tool_name, llm_response)
-#             VALUES (%s, %s, %s)
-#             RETURNING id;
-#             """
-   
-#         result = self.__execute_query(query, (chat_context.user_message, chat_context.tool_name, chat_context.llm_response), fetch_one=True)
-   
-#         if isinstance(result, dict) and "error" in result:
-#             return result
-  
-#         return {"id": result[0]}
-    
-#     def get_chat_context(self, chat_context_id: int):
-#         """ Method to fetch chat context by id from database """
-
-#         query = """
-#             SELECT id, user_message, tool_name, llm_response, created_at
-#             FROM chat_context
-#             WHERE id = %s;
-#             """
-
-#         return self.__execute_query(query, (chat_context_id,), fetch_one=True)
-
-
-#     def delete_interaction(self, chat_context_id: int):
-#         """ Method to fetch chat context by id from database """
-#         query = """
-#             DELETE FROM chat_context
-#             WHERE id = %s
-#             """
-#         return self.__execute_query(query, (chat_context_id,), fetch_one=True)
