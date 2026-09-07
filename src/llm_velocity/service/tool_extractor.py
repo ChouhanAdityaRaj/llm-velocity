@@ -1,6 +1,7 @@
-from src.llm_velocity.engine import semantic_search, ollama_exec, tool_definition_store
-from src.llm_velocity.utils import utils
+from src.llm_velocity.engine import ollama_exec, semantic_search, tool_definition_store
 from src.llm_velocity.models import models
+from src.llm_velocity.utils import utils
+
 
 class ToolExtractor:
     def __init__(self, semantic_search_obj: semantic_search.SemanticSearch, ollama_exec_obj: ollama_exec.OllamaExec, tool_definition_store_obj: tool_definition_store.ToolDefinitionStore):
@@ -10,7 +11,7 @@ class ToolExtractor:
 
     def extract_tool_info(self, chat_context: list[models.UserChatReq]) -> models.StoreResp | None:
 
-        tool_description: dict[str, str]
+        tool_description: dict[str, str] = {}
         filter_user_messages: list[str] = [user_message.user_message for user_message in chat_context]
 
         for tool_name, tool_details in self.__tool_definition_store_obj.get_all_tool_definition().items():
@@ -20,17 +21,17 @@ class ToolExtractor:
 
         tool_details = self.__tool_definition_store_obj.get_tool_definition(tool_matching_details.method_name)
 
-        formatted_parameters = list[dict[str, str]]
+        formatted_parameters: list[tuple[str, str]] = []
 
         for parameter in tool_details.parameters:
-            formatted_parameters.append({parameter.name, parameter.description})
+            formatted_parameters.append((parameter.name, parameter.description))
 
         arguments =  self.__ollama_exec_obj.extract_argument(chat_context, formatted_parameters)
 
         validation_err : list[str] = []
 
-        for parameter in tool_details.parameters:
-            validation_err_msg = parameter.validationCallback(arguments[0][parameter.name])
+        for i, parameter in enumerate(tool_details.parameters):
+            validation_err_msg = parameter.validationCallback(arguments[i][parameter.name])
             if validation_err_msg == None:
                 continue
 

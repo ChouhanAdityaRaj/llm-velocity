@@ -152,7 +152,7 @@ class SemanticSearch:
             weight = i + 1  # later message in the list => higher weight
 
             matches.append(
-                MethodMatch(
+                models.MethodMatch(
                     method_name=method_names[best_idx],
                     match_percent=round(best_score * 100, 2),
                     user_message=msg,

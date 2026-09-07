@@ -3,7 +3,7 @@ from pathlib import Path
 from src.llm_velocity.models import models
 
 class ToolDefinitionStore:
-    def __init__(self, tool_definition: models.ToolInfo):
+    def __init__(self, tool_definition: dict[str, models.ToolInfo]):
         self.__tool_info: dict[str, models.ToolInfo] = tool_definition
 
     def get_all_tool_definition(self) ->  dict[str, models.ToolInfo]:

@@ -37,7 +37,7 @@ class MethodMatch:
 class ToolParameters:
     name: str = ""
     description: str = ""
-    validationCallback: Callable[[str],  str | None]
+    validationCallback: Callable[[Any], str | None] | None = None 
 
 @dataclass
 class ToolInfo:

@@ -33,13 +33,13 @@ class LLMLookUpStore:
         self.__database_exec_obj.init_tables()
         self.__semantic_search_obj.load_index_from_file()
 
-    def call_store(self, chat_messages: list[models.UserChatReq], is_tool_calling: bool = False) -> models.StoreResp | None :
+    def call(self, chat_context: list[models.UserChatReq], is_tool_calling: bool = False) -> models.StoreResp | None :
 
         # tool calling defiled 
         if not is_tool_calling:
 
             # Extract first user message
-            none_tool_calling_user_message: str = chat_messages[0].user_message
+            none_tool_calling_user_message: str = chat_context[0].user_message
 
             # search in store if found any thing return that response
             look_up_store_res =  self.__cache_manager_obj.search_in_store(none_tool_calling_user_message)
@@ -62,6 +62,6 @@ class LLMLookUpStore:
             return ollama_call_res
 
         else:
-            resp = self.__tool_extractor_obj.extract_tool_info(chat_messages)
+            resp = self.__tool_extractor_obj.extract_tool_info(chat_context=chat_context)
 
             return resp
