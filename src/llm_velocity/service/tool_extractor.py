@@ -21,20 +21,22 @@ class ToolExtractor:
 
         tool_details = self.__tool_definition_store_obj.get_tool_definition(tool_matching_details.method_name)
 
+        if len(tool_details.parameters) == 0:
+            return utils.output_json(tool_name=tool_details.name)
+
         formatted_parameters: list[tuple[str, str]] = []
 
         for parameter in tool_details.parameters:
             formatted_parameters.append((parameter.name, parameter.description))
 
-        arguments =  self.__ollama_exec_obj.extract_argument(chat_context, formatted_parameters)
+        arguments = self.__ollama_exec_obj.extract_argument(chat_context, formatted_parameters)
 
         validation_err : list[str] = []
 
-        for i, parameter in enumerate(tool_details.parameters):
-            validation_err_msg = parameter.validationCallback(arguments[i][parameter.name])
+        for parameter in tool_details.parameters:
+            validation_err_msg = parameter.validationCallback(arguments[parameter.name])
             if validation_err_msg == None:
                 continue
-
             validation_err.append(validation_err_msg)
 
         return utils.output_json("\n".join(validation_err), tool_details.name, arguments)

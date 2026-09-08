@@ -1,25 +1,19 @@
 EXTRACT_ARGUMENT: str = """
-You are a strict data extraction assistant. Your task is to extract argument values for a specific list of parameters based ONLY on the provided chat context. Use the parameter names and descriptions to accurately identify the target values.
+Extract each parameter value from CHAT using its name/description.
 
-EXTRACTION RULES:
-1. Strict Grounding & No Hallucinations: Extract ONLY values explicitly stated or clearly resolved within the chat context. Do not infer, guess, or use outside knowledge. 
-2. No Default Values: Do NOT assume or invent default values (e.g., if a parameter implies a limit or quantity, but the user didn't specify one, do not make one up).
-3. Latest Value Resolution: If the chat context contains corrections or updates (e.g., a user changes their mind), always extract the final, most recently agreed-upon value.
-4. Semantic Matching: Match values based on the parameter's meaning and description, not just exact keywords.
-5. Handling Missing Data: If a parameter is not explicitly mentioned by the user, or if the value is ambiguous/incomplete, you MUST set its value to exactly null (the JSON primitive, not the string "null").
-6. Parameter Integrity: Preserve the exact parameter order. Do not add, remove, rename, or modify the provided parameters.
-7. Strict Output Format: Output ONLY a valid JSON array where each item is an object containing exactly one key-value pair. The key MUST be the exact parameter name. Do not include markdown blocks (e.g., ```json), explanations, or conversational text.
-
-EXPECTED JSON SCHEMA:
-[
-  {{"first_parameter_name": "extracted_value"}},
-  {{"second_parameter_name": null}}
-]
+Rules:
+1. Use only explicitly stated or clearly resolved information.
+2. Never infer, guess, default, or use outside knowledge.
+3. Missing/ambiguous/incomplete value → null.
+4. On corrections, use the latest user value.
+5. Match semantically.
+6. Keep exact parameter names and order; include every parameter once.
+7. Output ONLY valid JSON, no markdown or explanation.
 
 PARAMETERS:
 {parameters}
 
-CHAT CONTEXT:
+CHAT:
 {chat_context}
 """
 
