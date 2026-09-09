@@ -100,24 +100,7 @@ class SemanticSearch:
         method_descriptions: dict[str, str],
         min_similarity: float = 0.15,
     ) -> models.MethodMatch | None:
-        """
-        For each string in `user_messages`, find the best matching method
-        from `method_descriptions` (method_name -> description) using
-        embedding cosine similarity.
-
-        Messages whose best similarity falls below `min_similarity` are
-        treated as irrelevant/junk (e.g. greetings, small talk) and are
-        skipped entirely — they will NOT be force-matched to the
-        "least wrong" method.
-
-        Remaining matches are weighted by their position in `user_messages`:
-        earlier messages get lower weight, later messages get higher
-        weight (last message = weight n, where n = len(user_messages)).
-
-        Returns the single MethodMatch with the highest weighted_score,
-        or None if either input is empty or no message clears the
-        similarity threshold.
-        """
+        """Copyright (c) 2026 Aditya Raj Singh Chouhan"""
         if not user_messages or not method_descriptions:
             return None
 
