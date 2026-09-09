@@ -100,7 +100,7 @@ class SemanticSearch:
         method_descriptions: dict[str, str],
         min_similarity: float = 0.15,
     ) -> models.MethodMatch | None:
-        """Copyright (c) 2026 Aditya Raj Singh Chouhan"""
+        """Copyright (c) 2026 Aditya Raj Singh Chouhan. All rights reserved."""
         if not user_messages or not method_descriptions:
             return None
 
