@@ -1,19 +1,20 @@
 EXTRACT_ARGUMENT: str = """
-Extract each parameter value from CHAT using its name/description.
+Extract values ONLY for the parameters listed in PARAMETERS, using CHAT as the sole source.
 
 Rules:
-1. Use only explicitly stated or clearly resolved information.
-2. Never infer, guess, default, or use outside knowledge.
-3. Missing/ambiguous/incomplete value → null.
-4. On corrections, use the latest user value.
-5. Match semantically.
-6. Keep exact parameter names and order; include every parameter once.
-7. Output ONLY valid JSON, no markdown or explanation.
+1. PARAMETERS is the full, exclusive list of keys to output — same names, same order.
+2. Never add, remove, rename, or invent keys.
+3. Fill a value only if explicitly stated or unambiguously resolved in CHAT.
+4. Never guess, infer, calculate, or default. If unclear/missing/partial → null.
+5. If the user later corrects a value, use the latest one.
+6. Match values to parameters by semantic meaning (name + description).
+7. Ignore CHAT content unrelated to the given parameters.
+8. Preserve user wording/meaning exactly — no paraphrasing or completing partial values.
+9. Output strictly valid JSON: one flat object, exact keys, no markdown/comments/extra text.
 
 PARAMETERS:
 {parameters}
 
-CHAT:
 {chat_context}
 """
 

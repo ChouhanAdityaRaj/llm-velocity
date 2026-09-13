@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Optional
 from typing import Callable
+from enum import Enum
 
 
 @dataclass
@@ -49,4 +50,10 @@ class ToolInfo:
 class UserChatReq:
     user_message: str
     llm_response: Optional[str] = None
+
+class LlmProvider(Enum):
+    OPENAI = "openai"
+    GEMINI = "gemini"
+    ANTHROPIC = "anthropic"
+    OLLAMA = "ollama"
 

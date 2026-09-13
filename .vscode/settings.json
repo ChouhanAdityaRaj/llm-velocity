@@ -12,5 +12,11 @@
     // "--disable=invalid-name",
     // "--disable=too-few-public-methods"
   ],
-  "cSpell.words": ["ollama"]
+  "cSpell.words": [
+    "faiss",
+    "numpy",
+    "ollama",
+    "platformdirs",
+    "rapidfuzz"
+  ]
 }

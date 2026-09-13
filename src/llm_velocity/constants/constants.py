@@ -7,3 +7,5 @@ TEXT_MATCH_MIN_SCORE: float = 88.0
 SEMANTIC_SEARCH_MODEL: str = "all-MiniLM-L6-v2"
 USER_MESSAGE_PROPERTY: str = "user_message:"
 PROJECT_NAME: str = "llm_velocity"
+TOOL_MIN_MATCHING_THRESHOLD: float = 0.22
+DEFAULT_LLM_TIME_OUT: int = 600

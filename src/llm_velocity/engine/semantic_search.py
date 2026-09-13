@@ -98,7 +98,6 @@ class SemanticSearch:
         self,
         user_messages: list[str],
         method_descriptions: dict[str, str],
-        min_similarity: float = 0.15,
     ) -> models.MethodMatch | None:
         """Copyright (c) 2026 Aditya Raj Singh Chouhan. All rights reserved."""
         if not user_messages or not method_descriptions:
@@ -129,7 +128,7 @@ class SemanticSearch:
             best_score = float(similarities[best_idx])  # -1..1
 
             # Skip junk/irrelevant messages that don't clear the threshold
-            if best_score < min_similarity:
+            if best_score < constants.TOOL_MIN_MATCHING_THRESHOLD:
                 continue
 
             weight = i + 1  # later message in the list => higher weight
