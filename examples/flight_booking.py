@@ -125,7 +125,7 @@ luStore = LLMLookUpStore(
     llm_model="gemini-3.6-flash",
     endpoint_url="",
     tools_definition=tools_definition,
-    api_key="AQ.Ab8RN6IYirFvc3qwd5yZCTRClUmUdJCw12tF2wHV2nw9KW-irw"
+    api_key="your_api_key"
 )
 
 luStore.init_setup()
