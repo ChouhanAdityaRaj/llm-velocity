@@ -147,18 +147,18 @@ luStore.init_setup()
 # ]
 
 userContext: list[models.UserChatReq] =  [
-    # models.UserChatReq(
-    #     user_message="give me available flight options from japan to canada",
-    #     llm_response="Please provide valid destination location, we only provide flight to China, Africa.\nPlease provide booking date."
-    # ),
-    # models.UserChatReq(
-    #     user_message="my destination is Africa",
-    #     llm_response="Please provide booking date."
-    # ),
-    # models.UserChatReq(
-    #     user_message="2 dec 2026",
-    #     llm_response="{from_location': 'japan', 'to_location': 'Africa', 'date': '2026-12-02}"
-    # ),
+    models.UserChatReq(
+        user_message="give me available flight options from japan to canada",
+        llm_response="Please provide valid destination location, we only provide flight to China, Africa.\nPlease provide booking date."
+    ),
+    models.UserChatReq(
+        user_message="my destination is Africa",
+        llm_response="Please provide booking date."
+    ),
+    models.UserChatReq(
+        user_message="2 dec 2026",
+        llm_response="{from_location': 'japan', 'to_location': 'Africa', 'date': '2026-12-02}"
+    ),
     models.UserChatReq(
         user_message="give me boing-15 information"
     )

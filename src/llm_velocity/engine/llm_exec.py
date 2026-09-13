@@ -42,9 +42,16 @@ class LLMExec:
             case models.LlmProvider.OLLAMA:
                 data = self.__call_ollama(prompt.EXTRACT_ARGUMENT.format(chat_context=formatted_chat_context, parameters=formatted_parameters))
 
-            
+
+
         if not data:
             return {}
+        
+        data = data.strip()
+
+        if data.startswith("```"):
+            data = data.removeprefix("```json").removeprefix("```")
+            data = data.removesuffix("```").strip()
         
         resp: dict[str, Any] = json.loads(data)
         return resp
