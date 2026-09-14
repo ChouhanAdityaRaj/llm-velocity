@@ -10,10 +10,10 @@ from src.llm_velocity.utils import utils
 class LLMLookUpStore:
     def __init__(self,llm_provider: str, llm_model: str, endpoint_url: str, api_key: str, tools_definition: dict[str, models.ToolInfo], llm_temperature: float = 0.7):
         self.__storage_obj : storage.Storage
-        self.__llm_provider: str = llm_provider
-        self.__llm_model: str = llm_model
-        self.__endpoint_url: str = endpoint_url
-        self.__api_key: str = api_key
+        self.__llm_provider: str = llm_provider.strip()
+        self.__llm_model: str = llm_model.strip()
+        self.__endpoint_url: str = endpoint_url.strip()
+        self.__api_key: str = api_key.strip()
         self.__llm_temperature: float = llm_temperature
         self.__tools_definition: dict[str, models.ToolInfo] = tools_definition
         self.__database_exec_obj: database_exec.DatabaseExec 
@@ -25,6 +25,27 @@ class LLMLookUpStore:
 
     def init_setup(self) -> None:
         """Initial setup of class"""
+        
+        if self.__llm_provider == "":
+            raise Exception("llm_provider is required")
+
+        try:
+            _ = models.LLMProvider(self.__llm_provider)
+        except ValueError:
+            raise Exception("invalid llm_provider")
+
+        if self.__llm_model == "":
+            raise Exception("llm_model is required")
+
+        if self.__llm_provider == models.LLMProvider.OLLAMA.value and self.__endpoint_url == "":
+            raise Exception("endpoint_url is required ")
+
+        if self.__llm_provider != models.LLMProvider.OLLAMA.value and self.__api_key == "":
+            raise Exception("api_key is required")
+
+        if not self.__tools_definition:
+            raise Exception("tools_definition is required")
+        
         self.__storage_obj = storage.Storage(constants.PROJECT_NAME, constants.DATABASE_NAME, constants.INDEX_NAME)
         self.__database_exec_obj = database_exec.DatabaseExec(self.__storage_obj.database_path)
         self.__llm_exec_obj = llm_exec.LLMExec(self.__llm_provider, self.__endpoint_url, self.__llm_model, self.__api_key, self.__llm_temperature)
@@ -37,7 +58,6 @@ class LLMLookUpStore:
         self.__semantic_search_obj.load_index_from_file()
 
     def call(self, chat_context: list[models.UserChatReq], is_tool_calling: bool = False) -> models.StoreResp | None :
-
         # tool calling defiled 
         if not is_tool_calling:
 
@@ -51,7 +71,10 @@ class LLMLookUpStore:
                 return look_up_store_res
             
             # if store data is none call ollama
-            ollama_call_res = self.__llm_exec_obj.call(none_tool_calling_user_message)
+            try:
+                ollama_call_res = self.__llm_exec_obj.call(none_tool_calling_user_message)
+            except Exception:
+                raise
 
             # if ollama response is none return error
             if ollama_call_res == None :
@@ -65,6 +88,9 @@ class LLMLookUpStore:
             return ollama_call_res
 
         else:
-            resp = self.__tool_extractor_obj.extract_tool_info(chat_context=chat_context)
+            try:
+                resp = self.__tool_extractor_obj.extract_tool_info(chat_context=chat_context)
+            except Exception:
+                raise
 
             return resp

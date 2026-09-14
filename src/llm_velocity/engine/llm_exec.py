@@ -11,7 +11,7 @@ class LLMExec:
         self.__llm_model: str = llm_model
         self.__api_key: str = api_key
         self.__temperature: float = temperature
-        self.__llm_provider: models.LlmProvider = models.LlmProvider(llm_provider)
+        self.__llm_provider: models.LLMProvider = models.LLMProvider(llm_provider)
 
     def  extract_argument(self, chat_context: list[models.UserChatReq], argument_to_extract: list[tuple[str, str]]) ->  dict[str, Any]:
         """ 
@@ -31,17 +31,20 @@ class LLMExec:
         print("Prompt: ", prompt.EXTRACT_ARGUMENT.format(chat_context=formatted_chat_context, parameters=formatted_parameters))
 
         data = None
-
-        match self.__llm_provider:
-            case models.LlmProvider.ANTHROPIC:
-                data = self.__call_anthropic(formatted_chat_context, prompt.EXTRACT_ARGUMENT.format(chat_context=None, parameters=formatted_parameters))
-            case models.LlmProvider.OPENAI:
-                data = self.__call_openai(formatted_chat_context, prompt.EXTRACT_ARGUMENT.format(chat_context=None, parameters=formatted_parameters))
-            case models.LlmProvider.GEMINI:
-                data = self.__call_gemini(formatted_chat_context, prompt.EXTRACT_ARGUMENT.format(chat_context=None, parameters=formatted_parameters))
-            case models.LlmProvider.OLLAMA:
-                data = self.__call_ollama(prompt.EXTRACT_ARGUMENT.format(chat_context=formatted_chat_context, parameters=formatted_parameters))
-
+        try:
+            match self.__llm_provider:
+                case models.LLMProvider.ANTHROPIC:
+                    data = self.__call_anthropic(formatted_chat_context, prompt.EXTRACT_ARGUMENT.format(chat_context=None, parameters=formatted_parameters))
+                case models.LLMProvider.OPENAI:
+                    data = self.__call_openai(formatted_chat_context, prompt.EXTRACT_ARGUMENT.format(chat_context=None, parameters=formatted_parameters))
+                case models.LLMProvider.GEMINI:
+                    data = self.__call_gemini(formatted_chat_context, prompt.EXTRACT_ARGUMENT.format(chat_context=None, parameters=formatted_parameters))
+                case models.LLMProvider.OLLAMA:
+                    data = self.__call_ollama(prompt.EXTRACT_ARGUMENT.format(chat_context=formatted_chat_context, parameters=formatted_parameters))
+        except requests.HTTPError as e: 
+            raise Exception(f"error while calling llm provider. get http {e.response.status_code}") from e
+        except Exception as e:
+            raise Exception(f"internal error")
 
 
         if not data:
@@ -52,17 +55,40 @@ class LLMExec:
         if data.startswith("```"):
             data = data.removeprefix("```json").removeprefix("```")
             data = data.removesuffix("```").strip()
+
+        try:
+            resp: dict[str, Any] = json.loads(data)
+        except json.JSONDecodeError as e:
+            raise Exception("invalid json") from e
         
-        resp: dict[str, Any] = json.loads(data)
         return resp
         
     def  call(self, user_prompt: str) -> str | None:
-        return self.__call_llm(f"{user_prompt}\n{prompt.LLM_SUFFIX}")
+        data = None
+        try:
+            match self.__llm_provider:
+                case models.LLMProvider.ANTHROPIC:
+                    data = self.__call_anthropic(f"{user_prompt}\n{prompt.LLM_SUFFIX}")
+                case models.LLMProvider.OPENAI:
+                    data = self.__call_openai(f"{user_prompt}\n{prompt.LLM_SUFFIX}")
+                case models.LLMProvider.GEMINI:
+                    data = self.__call_gemini(f"{user_prompt}\n{prompt.LLM_SUFFIX}")
+                case models.LLMProvider.OLLAMA:
+                    data = self.__call_ollama(f"{user_prompt}\n{prompt.LLM_SUFFIX}")
+        except requests.HTTPError as e: 
+            raise Exception(f"error while calling llm provider. get http {e.response.status_code}") from e
+        except Exception as e:
+            raise Exception(f"internal error")
+
+        if data.startswith("```"):
+            data = data.removeprefix("```json").removeprefix("```")
+            data = data.removesuffix("```").strip()
+            
+        return data
+
 
 
     ##### Internal methods
-
-
     def __call_anthropic(self, prompt: str, system: str =None):
         url = "https://api.anthropic.com/v1/messages"
         headers = {

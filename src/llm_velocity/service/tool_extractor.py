@@ -29,10 +29,13 @@ class ToolExtractor:
         for parameter in tool_details.parameters:
             formatted_parameters.append((parameter.name, parameter.description))
 
-        arguments = self.__llm_exec_obj.extract_argument(chat_context, formatted_parameters)
+        try:
+            arguments = self.__llm_exec_obj.extract_argument(chat_context, formatted_parameters)
+        except Exception: 
+            raise
 
         validation_err : list[str] = []
-
+        
         for parameter in tool_details.parameters:
             validation_err_msg = parameter.validationCallback(arguments.get(parameter.name))
             if validation_err_msg == None:

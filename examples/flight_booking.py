@@ -121,14 +121,17 @@ tools_definition: dict[str, models.ToolInfo] = {
 }
 
 luStore = LLMLookUpStore(
-    llm_provider=models.LlmProvider.GEMINI.value,
+    llm_provider=models.LLMProvider.GEMINI.value,
     llm_model="gemini-3.6-flash",
     endpoint_url="",
     tools_definition=tools_definition,
     api_key="your_api_key"
 )
 
-luStore.init_setup()
+try:
+    luStore.init_setup()
+except Exception as e:
+    print(e)
 
 ########################### Input ##################################
 # list flight
@@ -163,11 +166,20 @@ userContext: list[models.UserChatReq] =  [
         user_message="give me boing-15 information"
     )
 ]
- 
+
+# userContext: list[models.UserChatReq] =  [
+#     models.UserChatReq(user_message="what is python")
+# ]
 
 
 start_time = int(time.time())
-res = luStore.call(userContext, True)
+try:
+    res = luStore.call(userContext, True)
+except Exception as e:
+    print(e)
 end_time = int(time.time())
-print("response", res)
+# print("response", res)
 print("total time taken", end_time -  start_time)
+
+
+

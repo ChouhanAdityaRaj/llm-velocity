@@ -51,7 +51,7 @@ class UserChatReq:
     user_message: str
     llm_response: Optional[str] = None
 
-class LlmProvider(Enum):
+class LLMProvider(Enum):
     OPENAI = "openai"
     GEMINI = "gemini"
     ANTHROPIC = "anthropic"
