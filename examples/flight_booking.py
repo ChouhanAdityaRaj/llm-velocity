@@ -60,7 +60,7 @@ def validate_booking_id(value: Any) -> str | None:
 tools_definition: dict[str, models.ToolInfo] = {
     "search_flights": models.ToolInfo(
         name="search_flights",
-        description="Search for available flights between two locations on a specific date.",
+        description="Search for available flights.",
         parameters=[
             models.ToolParameters(
                 name="from_location",
@@ -109,7 +109,7 @@ tools_definition: dict[str, models.ToolInfo] = {
     ),
     "get_booking_details": models.ToolInfo(
         name="get_booking_details",
-        description="Get the details and current status of an existing flight booking.",
+        description="Retrieve the details of an existing flight booking.",
         parameters=[
             models.ToolParameters(
                 name="booking_id",
@@ -149,37 +149,74 @@ except Exception as e:
 #     ),
 # ]
 
-userContext: list[models.UserChatReq] =  [
-    models.UserChatReq(
-        user_message="give me available flight options from japan to canada",
-        llm_response="Please provide valid destination location, we only provide flight to China, Africa.\nPlease provide booking date."
-    ),
-    models.UserChatReq(
-        user_message="my destination is Africa",
-        llm_response="Please provide booking date."
-    ),
-    models.UserChatReq(
-        user_message="2 dec 2026",
-        llm_response="{from_location': 'japan', 'to_location': 'Africa', 'date': '2026-12-02}"
-    ),
-    models.UserChatReq(
-        user_message="give me boing-15 information"
-    )
-]
-
-# userContext: list[models.UserChatReq] =  [
-#     models.UserChatReq(user_message="what is python")
+# userContext: list[models.UserChatReq] = [
+#     models.UserChatReq(
+#         user_message="find flights from UK to Africa",
+#         llm_response=(
+#             "Please provide valid departure location, we only provide flight from USA, India, japan.\nPlease provide booking date."
+#         )
+#     ),
+#     models.UserChatReq(
+#         user_message="I am flying from japan",
+#         llm_response="Please provide booking date."
+#     ),
+#     models.UserChatReq(
+#         user_message="December 2nd 2026",
+#         llm_response="{from_location': 'japan', 'to_location': 'Africa', 'date': '2026-12-02'}"
+#     ),
 # ]
 
+# userContext: list[models.UserChatReq] = [
+#     models.UserChatReq(
+#         user_message="find flights to Africa",
+#         llm_response=(
+#             "Please provide your where you flying from.\nPlease provide booking date."
+#         )
+#     ),
+#     models.UserChatReq(
+#         user_message="from USA",
+#         llm_response="Please provide booking date."
+#     ),
+#     models.UserChatReq(
+#         user_message="December 10 2026",
+#         llm_response="{from_location': 'USA', 'to_location': 'Africa', 'date': '2026-12-10'}"
+#     ),
+#         models.UserChatReq(
+#         user_message="I want to see the flight details",
+#         llm_response="Please provide flight id."
+#     ),
+#     models.UserChatReq(
+#         user_message="The flight id is AI203",
+#         llm_response="{'flight_id': 'AI203'}"
+#     ),
+#     models.UserChatReq(
+#         user_message="book flight AI203",
+#         llm_response="Please provide your name."
+#     ),
+#     models.UserChatReq(
+#         user_message="My name is Aditya Raj Singh Chouhan"
+#     ),
+# ]
 
-start_time = int(time.time())
+userContext: list[models.UserChatReq] = [
+    models.UserChatReq(
+        user_message="book a flight for Aditya Sharma",
+        # llm_response="Please provide flight id."
+    ),
+    # models.UserChatReq(
+    #     user_message="Book flight AI203"
+    # ),
+]
+
+
 try:
+    start_time = int(time.time())
     res = luStore.call(userContext, True)
+    end_time = int(time.time())
+    print("response", res)
+    print("total time taken", end_time -  start_time)
 except Exception as e:
     print(e)
-end_time = int(time.time())
-# print("response", res)
-print("total time taken", end_time -  start_time)
 
 
 

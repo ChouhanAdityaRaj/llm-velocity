@@ -103,23 +103,31 @@ tools_definition: dict[str, models.ToolInfo] =  {
 
 luStore = LLMLookUpStore("gemma2:2b","http://localhost:11434", tools_definition)
 
-luStore.init_setup()
+try:
+    luStore.init_setup()
+except Exception as e:
+    print(e)
 
 ########################### Input ##################################
-userContext: list[models.UserChatReq] =  [
-    models.UserChatReq(user_message="check my bank balance", llm_response="Please provide your account id"),
-    models.UserChatReq(user_message="123456abc"),
-    models.UserChatReq(user_message="I want to transfer money", llm_response="Please provide your account ID.\nPlease provide your account ID.\nPlease enter the amount you want to transfer."),
-    models.UserChatReq(user_message="transfer money from xya to 123 ", llm_response="Please enter the amount you want to transfer."),
-    models.UserChatReq(user_message="2201"),
-    models.UserChatReq(user_message="give me my transactions list"),
-    models.UserChatReq(user_message="hahah")
-]
+# userContext: list[models.UserChatReq] =  [
+#     models.UserChatReq(user_message="check my bank balance", llm_response="Please provide your account id"),
+#     models.UserChatReq(user_message="123456abc"),
+#     models.UserChatReq(user_message="I want to transfer money", llm_response="Please provide your account ID.\nPlease provide your account ID.\nPlease enter the amount you want to transfer."),
+#     models.UserChatReq(user_message="transfer money from aaa-133331212 to abc-133331219"),
+#     # models.UserChatReq(user_message="2201"),
+#     # models.UserChatReq(user_message="give me my transactions list"),
+#     # models.UserChatReq(user_message="hahah")
+# ]
  
-
+userContext: list[models.UserChatReq] =  [
+    models.UserChatReq(user_message="what is python")
+]
 
 start_time = int(time.time())
-res = luStore.call(userContext, True)
+try:
+    res = luStore.call(userContext, True)
+except Exception as e:
+    print(e)
 end_time = int(time.time())
 print("response", res)
 print("total time taken", end_time -  start_time)
