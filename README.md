@@ -26,13 +26,6 @@
 
 # ✨ Features
 
-### 🚀 Smart Response Recall
-
-> **Never compute the same informational or knowledge-seeking prompts twice.**
-
-`llm_velocity` intelligently memorizes your previous requests, returning instant responses instead of making redundant llm calls.
-
-<br/>
 
 ### 🛠️ Native Tool Calling
 
@@ -40,6 +33,13 @@
 
 The framework automatically handles multi-turn conversations and tool invocation, minimizing LLM calls and unnecessary token consumption while enabling faster, more efficient, and deterministic agent execution.
 
+### 🚀 Smart Response Recall
+
+> **Never compute the same informational or knowledge-seeking prompts twice.**
+
+`llm_velocity` intelligently memorizes your previous requests, returning instant responses instead of making redundant llm calls.
+
+<br/>
 ---
 
 # 📦 Installation
