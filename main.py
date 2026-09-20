@@ -1,4 +1,4 @@
-from llm_velocity import LLMLookUpStore
+from llm_velocity import VelocityEngine
 from llm_velocity.models import models
 from typing import Any
 import time
@@ -101,7 +101,7 @@ tools_definition: dict[str, models.ToolInfo] =  {
     ),
 }
 
-luStore = LLMLookUpStore("gemma2:2b","http://localhost:11434", tools_definition)
+luStore = VelocityEngine("gemma2:2b","http://localhost:11434", tools_definition)
 
 try:
     luStore.init_setup()

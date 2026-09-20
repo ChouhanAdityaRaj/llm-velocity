@@ -1,3 +1,3 @@
-from .llm_velocity import LLMLookUpStore
+from .llm_velocity import VelocityEngine
 
-__all__ = ["LLMLookUpStore"]
+__all__ = ["VelocityEngine"]

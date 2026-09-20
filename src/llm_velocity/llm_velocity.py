@@ -7,7 +7,7 @@ from src.llm_velocity.constants import constants
 from src.llm_velocity.models import models
 from src.llm_velocity.utils import utils
 
-class LLMLookUpStore:
+class VelocityEngine:
     def __init__(self,llm_provider: str, llm_model: str, endpoint_url: str, api_key: str, tools_definition: dict[str, models.ToolInfo], llm_temperature: float = 0.7):
         self.__storage_obj : storage.Storage
         self.__llm_provider: str = llm_provider.strip()

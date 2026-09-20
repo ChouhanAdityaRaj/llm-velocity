@@ -1,4 +1,4 @@
-from llm_velocity import LLMLookUpStore
+from llm_velocity import VelocityEngine
 from llm_velocity.models import models
 from typing import Any
 import time
@@ -120,12 +120,12 @@ tools_definition: dict[str, models.ToolInfo] = {
     ),
 }
 
-luStore = LLMLookUpStore(
+luStore = VelocityEngine(
     llm_provider=models.LLMProvider.GEMINI.value,
     llm_model="gemini-3.6-flash",
     endpoint_url="",
     tools_definition=tools_definition,
-    api_key="your_api_key"
+    api_key=""
 )
 
 try:
