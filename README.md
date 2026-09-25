@@ -40,6 +40,17 @@ The framework automatically handles multi-turn conversations and tool invocation
 `llm_velocity` intelligently memorizes your previous requests, returning instant responses instead of making redundant llm calls.
 
 <br/>
+
+---
+
+# 🤔 Why Use LLM Velocity?
+- **LLM-Free Intent Detection** — Identify the appropriate tool without requiring an LLM call for every request.
+- **Lower Token Consumption** — Reduce unnecessary LLM usage and overall token consumption.
+- **Customizable Error Messages** — Let developers define their own user-friendly error messages for validation and tool-related errors.
+- **Avoid Repeated LLM Calls** — Reuse results for repeated informational and knowledge-seeking prompts.
+- **Easy to Learn** — A simple API that can be understood and integrated within **10–20 minutes**.
+- **Quick and Easy Setup** — Minimal configuration required to get started.
+
 ---
 
 # 📦 Installation
