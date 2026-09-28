@@ -20,7 +20,7 @@
 
 # ⚡ Introduction
 
-`llm_velocity` is a lightweight agent orchestration framework designed to build high-performance, cost-effective AI agents. It drastically reduces llm call expenses and accelerates response times by intelligently optimizing how the language model is utilized.
+`llm_velocity` is a lightweight framework designed to build high-performance, cost-effective AI agents. It drastically reduces LLM call expenses and accelerates response times by intelligently optimizing how the language model is utilized.
 
 ---
 
@@ -29,7 +29,7 @@
 
 ### 🛠️ Native Tool Calling
 
-> **Reduce LLM token consumption by 50–80% in tool-calling workflows.**
+> **Reduce LLM token consumption by up to 70% in tool-calling workflows.**
 
 The framework automatically handles multi-turn conversations and tool invocation, minimizing LLM calls and unnecessary token consumption while enabling faster, more efficient, and deterministic agent execution.
 
