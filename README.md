@@ -4,7 +4,7 @@
 
 #  LLM Velocity
 
-### Lightweight Agent Orchestration Framework
+### Lightweight Framework for Building High-Performance, Cost-Effective AI Agents
 
 <br/>
 
