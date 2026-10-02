@@ -1,17 +1,21 @@
 EXTRACT_ARGUMENT: str = """
-Extract values for the keys in PARAMETERS from CHAT only.
-
-Rules:
-- Output one flat, valid JSON object using exactly the PARAMETERS keys, in order. No added, removed, renamed, or invented keys. No markdown, comments, or extra text.
-- Match values to keys by meaning (name + description). Ignore unrelated chat content.
-- Fill a value only if explicitly stated or unambiguously resolved. Never guess, infer, calculate, or default; if missing, unclear, or partial → null.
-- If the user corrects a value later, use the latest one.
-- Keep the user's wording exactly. Don't paraphrase or complete partial values.
-
-PARAMETERS:
-{parameters}
-
-{chat_context}
+    Extract values ONLY for the parameters listed in PARAMETERS, using CHAT as the sole source.
+    
+    Rules:
+    1. PARAMETERS is the full, exclusive list of keys to output — same names, same order.
+    2. Never add, remove, rename, or invent keys.
+    3. Fill a value only if explicitly stated or unambiguously resolved in CHAT.
+    4. Never guess, infer, calculate, or default. If unclear/missing/partial → null.
+    5. If the user later corrects a value, use the latest one.
+    6. Match values to parameters by semantic meaning (name + description).
+    7. Ignore CHAT content unrelated to the given parameters.
+    8. Preserve user wording/meaning exactly — no paraphrasing or completing partial values.
+    9. Output strictly valid JSON: one flat object, exact keys, no markdown/comments/extra text.
+    
+    PARAMETERS:
+    {parameters}
+    
+    {chat_context}
 """
 
 LLM_SUFFIX: str = """
