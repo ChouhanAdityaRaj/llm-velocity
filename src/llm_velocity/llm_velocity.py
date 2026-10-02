@@ -1,11 +1,11 @@
-from src.llm_velocity.service.look_up_store import LookUpStore
-from src.llm_velocity.service.tool_extractor import ToolExtractor
-from src.llm_velocity.engine import database_exec, llm_exec, semantic_search, tool_definition_store, storage
+from llm_velocity.service.look_up_store import LookUpStore
+from llm_velocity.service.tool_extractor import ToolExtractor
+from llm_velocity.engine import database_exec, llm_exec, semantic_search, tool_definition_store, storage
 from sentence_transformers import SentenceTransformer
-from src.llm_velocity.models.models import ChatContext
-from src.llm_velocity.constants import constants
-from src.llm_velocity.models import models
-from src.llm_velocity.utils import utils
+from llm_velocity.models.models import ChatContext
+from llm_velocity.constants import constants
+from llm_velocity.models import models
+from llm_velocity.utils import utils
 
 class VelocityEngine:
     def __init__(self,llm_provider: str, llm_model: str, endpoint_url: str, api_key: str, tools_definition: dict[str, models.ToolInfo], llm_temperature: float = 0.7):

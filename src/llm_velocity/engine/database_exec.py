@@ -4,8 +4,8 @@ import threading
 import time
 from contextlib import contextmanager
 from typing import  Callable
-from src.llm_velocity.models.models import ChatContext
-from src.llm_velocity.sql.queries import CREATE_TABLES
+from llm_velocity.models.models import ChatContext
+from llm_velocity.sql.queries import CREATE_TABLES
 from pathlib import Path
 
 class DatabaseExec:

@@ -2,8 +2,8 @@ import os
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from src.llm_velocity.constants import constants
-from src.llm_velocity.models import models
+from llm_velocity.constants import constants
+from llm_velocity.models import models
 
 class SemanticSearch:
     def __init__(self, sentence_transformer_model: SentenceTransformer, index_file_path: str):

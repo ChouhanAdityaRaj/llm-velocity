@@ -1,6 +1,6 @@
-from src.llm_velocity.engine import database_exec, semantic_search, llm_exec, tool_definition_store, text_search
-from src.llm_velocity.utils import utils
-from src.llm_velocity.models import models
+from llm_velocity.engine import database_exec, semantic_search, llm_exec, tool_definition_store, text_search
+from llm_velocity.utils import utils
+from llm_velocity.models import models
 
 class LookUpStore:
     def __init__(self, database_exec_obj: database_exec.DatabaseExec, semantic_search_obj: semantic_search.SemanticSearch, llm_exec_obj: llm_exec.LLMExec, tool_definition_store_obj: tool_definition_store.ToolDefinitionStore):

@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from src.llm_velocity.models import models
+from llm_velocity.models import models
 
 class ToolDefinitionStore:
     def __init__(self, tool_definition: dict[str, models.ToolInfo]):

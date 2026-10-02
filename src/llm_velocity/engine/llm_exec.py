@@ -1,7 +1,7 @@
 import json
 import requests
-from src.llm_velocity.constants import prompt, constants
-from src.llm_velocity.models import models
+from llm_velocity.constants import prompt, constants
+from llm_velocity.models import models
 from dataclasses import fields
 from typing import Any 
 
@@ -28,7 +28,7 @@ class LLMExec:
 
         formatted_parameters = "\n".join(f"{key}: {value}" for key, value in argument_to_extract)
 
-        print("Prompt: ", prompt.EXTRACT_ARGUMENT.format(chat_context=formatted_chat_context, parameters=formatted_parameters))
+        # print("Prompt: ", prompt.EXTRACT_ARGUMENT.format(chat_context=formatted_chat_context, parameters=formatted_parameters))
 
         data = None
         try:
@@ -150,6 +150,7 @@ class LLMExec:
         resp = requests.post(url, headers=headers, json=payload, timeout=constants.DEFAULT_LLM_TIME_OUT)
         resp.raise_for_status()
         data = resp.json()
+        print("llm-velocity total token count", data.get("usageMetadata", {}).get("totalTokenCount", 0))
         parts = data["candidates"][0]["content"]["parts"]
         return "".join(p.get("text", "") for p in parts)
 

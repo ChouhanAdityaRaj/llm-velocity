@@ -1,5 +1,5 @@
 from rapidfuzz import process, fuzz
-from src.llm_velocity.constants import constants
+from llm_velocity.constants import constants
 
 
 class TextSearch:

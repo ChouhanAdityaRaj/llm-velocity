@@ -1,6 +1,6 @@
-from src.llm_velocity.engine import llm_exec, semantic_search, tool_definition_store
-from src.llm_velocity.models import models
-from src.llm_velocity.utils import utils
+from llm_velocity.engine import llm_exec, semantic_search, tool_definition_store
+from llm_velocity.models import models
+from llm_velocity.utils import utils
 
 
 class ToolExtractor:
