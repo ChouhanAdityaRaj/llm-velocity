@@ -8,7 +8,7 @@ from llm_velocity.models import models
 from llm_velocity.utils import utils
 
 class VelocityEngine:
-    def __init__(self,llm_provider: str, llm_model: str, endpoint_url: str, api_key: str, tools_definition: dict[str, models.ToolInfo], llm_temperature: float = 0.7):
+    def __init__(self,llm_provider: str, llm_model: str, tools_definition: dict[str, models.ToolInfo], endpoint_url: str ="", api_key: str = "", llm_temperature: float = 0.7):
         self.__storage_obj : storage.Storage
         self.__llm_provider: str = llm_provider.strip()
         self.__llm_model: str = llm_model.strip()
