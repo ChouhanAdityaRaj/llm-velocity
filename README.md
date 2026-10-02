@@ -22,6 +22,8 @@
 
 `llm_velocity` is a lightweight framework designed to build high-performance, cost-effective AI agents. It drastically reduces LLM call expenses and accelerates response times by intelligently optimizing how the language model is utilized.
 
+<br/>
+
 ---
 
 # ✨ Features
@@ -50,6 +52,26 @@ The framework automatically handles multi-turn conversations and tool invocation
 - **Avoid Repeated LLM Calls** — Reuse results for repeated informational and knowledge-seeking prompts.
 - **Easy to Learn** — A simple API that can be understood within **10–20 minutes**.
 - **Quick and Easy Setup** — Minimal configuration required to get started.
+
+<br/>
+
+---
+
+
+
+# ⏱️ Token Usage Benchmark
+
+A simple flight-booking Prompt-based agent benchmark shows how `llm_velocity` can significantly reduce token usage in tool-calling workflows.
+
+| Agent                         | Approx. Token Usage |
+| ----------------------------- | ------------------: |
+| Standard Flight Booking Prompt-based Agent |       ~1,500 tokens |
+| With `llm_velocity`           |         ~450 tokens |
+| **Reduction**                 |            **~70%** |
+
+In this benchmark, the same flight-booking workflow used approximately **1,500 tokens** with a conventional agent approach, while the `llm_velocity` implementation used approximately **450 tokens**.
+
+<br/>
 
 ---
 
