@@ -84,7 +84,7 @@ class SemanticSearch:
             
             # Convert similarity (inner product)
             similarity = float(score)
-            print("similarity", similarity)
+            # print("similarity", similarity)
             if similarity >= constants.SIMILARITY_THRESHOLD:
                 results.append({
                     "id": idx,

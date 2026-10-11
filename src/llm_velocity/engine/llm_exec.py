@@ -150,7 +150,7 @@ class LLMExec:
         resp = requests.post(url, headers=headers, json=payload, timeout=constants.DEFAULT_LLM_TIME_OUT)
         resp.raise_for_status()
         data = resp.json()
-        print("llm-velocity total token count", data.get("usageMetadata", {}).get("totalTokenCount", 0))
+        # print("llm-velocity total token count", data.get("usageMetadata", {}).get("totalTokenCount", 0))
         parts = data["candidates"][0]["content"]["parts"]
         return "".join(p.get("text", "") for p in parts)
 

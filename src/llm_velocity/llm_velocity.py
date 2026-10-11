@@ -67,7 +67,7 @@ class VelocityEngine:
             # search in store if found any thing return that response
             look_up_store_res =  self.__cache_manager_obj.search_in_store(none_tool_calling_user_message)
             if look_up_store_res != None:
-                print("from store")
+                # print("from store")
                 return look_up_store_res
             
             # if store data is none call ollama
@@ -84,7 +84,7 @@ class VelocityEngine:
                 llm_response=ollama_call_res,
                 user_message=none_tool_calling_user_message,
             ))
-            print("from ollama")
+            # print("from ollama")
             return ollama_call_res
 
         else:
