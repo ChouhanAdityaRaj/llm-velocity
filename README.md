@@ -190,7 +190,8 @@ user_context = [
 
 try:
     res = velocity_engine.call(user_context, True)
-    print(f"Response: {res}")
+    print(f"Response: {res}") 
+    #OUTPUT: Response: StoreResp(llm_response='', tool_name='search_flights', arguments={'from_location': 'Japan', 'date': 'December 2nd 2026'}, error=None, metadata=None)
 except Exception as e:
     print(f"Execution Error: {e}")
 ```
