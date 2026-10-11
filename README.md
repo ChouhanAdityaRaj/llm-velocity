@@ -26,6 +26,25 @@
 
 ---
 
+
+
+# ⏱️ Token Usage Benchmark
+
+A simple flight-booking Prompt-based agent benchmark shows how `llm_velocity` can significantly reduce token usage in tool-calling workflows.
+
+| Agent                         | Approx. Token Usage |
+| ----------------------------- | ------------------: |
+| Standard Flight Booking Prompt-based Agent |       ~1,500 tokens |
+| With `llm_velocity`           |         ~450 tokens |
+| **Reduction**                 |            **~70%** |
+
+In this benchmark, the same flight-booking workflow used approximately **1,500 tokens** with a conventional agent approach, while the `llm_velocity` implementation used approximately **450 tokens**.
+
+<br/>
+
+
+---
+
 # ✨ Features
 
 
@@ -55,23 +74,6 @@ The framework automatically handles multi-turn conversations and tool invocation
 
 <br/>
 
----
-
-
-
-# ⏱️ Token Usage Benchmark
-
-A simple flight-booking Prompt-based agent benchmark shows how `llm_velocity` can significantly reduce token usage in tool-calling workflows.
-
-| Agent                         | Approx. Token Usage |
-| ----------------------------- | ------------------: |
-| Standard Flight Booking Prompt-based Agent |       ~1,500 tokens |
-| With `llm_velocity`           |         ~450 tokens |
-| **Reduction**                 |            **~70%** |
-
-In this benchmark, the same flight-booking workflow used approximately **1,500 tokens** with a conventional agent approach, while the `llm_velocity` implementation used approximately **450 tokens**.
-
-<br/>
 
 ---
 
@@ -155,7 +157,7 @@ tools_definition: dict[str, models.ToolInfo] = {
 
 velocity_engine = VelocityEngine(
     llm_provider=models.LLMProvider.GEMINI.value,
-    llm_model="gemini-1.5-flash",
+    llm_model="gemini-3.5-flash",
     tools_definition=tools_definition,
     api_key="YOUR_API_KEY"
 )
