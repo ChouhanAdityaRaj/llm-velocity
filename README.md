@@ -182,8 +182,7 @@ user_context = [
         llm_response="Please provide a booking date."
     ),
     models.UserChatReq(
-        user_message="December 2nd 2026",
-        llm_response="{'from_location': 'Japan', 'date': '2026-12-02'}"
+        user_message="December 2nd 2026"
     ),
 ]
 
