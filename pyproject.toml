@@ -8,7 +8,7 @@ version = "2.0.0"
 authors = [
   { name="Aditya Raj Singh Chouhan", email="adityarajschouhan@gmail.com" },
 ]
-description = "llm_velocity` is a lightweight agent orchestration framework designed to build high-performance, cost-effective AI agents. It drastically reduces llm call expenses and accelerates response times by intelligently optimizing how the language model is utilized."
+description = "llm_velocity is a lightweight framework designed to build high-performance, cost-effective AI agents. It drastically reduces LLM call expenses and accelerates response times by intelligently optimizing how the language model is utilized."
 license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.11"
